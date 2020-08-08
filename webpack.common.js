@@ -10,7 +10,8 @@ module.exports = {
     path: path.resolve(__dirname, 'dist'),
     filename: 'keselect.min.js',
     library: 'keselect',
-    libraryTarget: 'umd'
+    libraryTarget: 'umd',
+    libraryExport: 'default'
   },
   module: {
     rules: [
