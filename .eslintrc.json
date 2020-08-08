@@ -1,0 +1,13 @@
+{
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "jest/globals": true
+  },
+  "extends": ["standard", "plugin:jest/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "rules": {}
+}
