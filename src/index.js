@@ -63,6 +63,10 @@ const keselect = ($origin) => {
     isOpen = !isOpen
   })
 
+  $content.addEventListener('click', (event) => {
+    event.stopPropagation()
+  })
+
   $options.forEach(($option, index) => {
     $option.addEventListener('click', () => {
       const { label, value } = $option.dataset
@@ -76,9 +80,13 @@ const keselect = ($origin) => {
         $selected.classList.add('keselect__selected--placeholder')
       }
 
+      $content.classList.remove('keselect__content--show')
+      $content.classList.add('keselect__content--hide')
+
       $selected.textContent = label
       $origin.selectedIndex = index
       selectedIndex = index
+      isOpen = false
     })
   })
 }
