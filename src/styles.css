@@ -41,6 +41,21 @@
   display: block;
 }
 
+.keselect__search-wrapper {
+  padding: 12px;
+}
+
+.keselect__search {
+  width: 100%;
+  height: 38px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  padding: 12px;
+  box-sizing: border-box;
+  font-family: Helvetica;
+  font-size: 14px;
+}
+
 .keselect__option {
   padding: 12px;
   cursor: pointer;

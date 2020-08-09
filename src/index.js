@@ -35,6 +35,15 @@ const keselect = ($origin) => {
   $content.classList.add('keselect__content', 'keselect__content--hide')
   $container.appendChild($content)
 
+  // Create searchbox to find options by keyword
+  const $searchWrapper = document.createElement('div')
+  $searchWrapper.classList.add('keselect__search-wrapper')
+  $content.appendChild($searchWrapper)
+
+  const $search = document.createElement('input')
+  $search.classList.add('keselect__search')
+  $searchWrapper.appendChild($search)
+
   // Create options element inside content element
   items.forEach(item => {
     const $option = document.createElement('div')
