@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Demo | Keselect</title>
+    <link rel="stylesheet" href="./keselect.min.css">
+    <style>
+      body {
+        padding: 16px;
+      }
+    </style>
   </head>
 
   <body>
-    <select name="" id="">
+    <select name="language_id" id="languages">
       <option value="">Select Languages</option>
       <option value="1">Bahasa Indonesia</option>
       <option value="2">Arabic</option>
@@ -18,5 +24,10 @@
     </select>
 
     <script src="./keselect.min.js"></script>
+    <script>
+      const $select = document.getElementById('languages')
+
+      keselect($select)
+    </script>
   </body>
 </html>
