@@ -113,6 +113,7 @@ const keselect = ($origin) => {
     isOpen = !isOpen
   })
 
+  // Prevent event bubbling when dropdown clicked
   $dropdown.addEventListener('click', (event) => {
     event.stopPropagation()
   })
@@ -144,8 +145,8 @@ const keselect = ($origin) => {
         $selected.classList.add('keselect__selected--placeholder')
       }
 
-      $optionWrapper.classList.remove('keselect__dropdown--show')
-      $optionWrapper.classList.add('keselect__dropdown--hide')
+      $dropdown.classList.remove('keselect__dropdown--show')
+      $dropdown.classList.add('keselect__dropdown--hide')
 
       $selected.textContent = label
       $origin.selectedIndex = index
