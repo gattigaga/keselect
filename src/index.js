@@ -1,29 +1,7 @@
 import './styles.css'
 
-const createOptionsElement = (items, $optionWrapper) => {
-  items.forEach(item => {
-    const $option = document.createElement('div')
-    $option.classList.add('keselect__option')
-    $option.dataset.label = item.label
-    $option.dataset.value = item.value
-    $optionWrapper.appendChild($option)
-
-    const $label = document.createElement('p')
-    $label.textContent = item.label
-    $option.appendChild($label)
-  })
-}
-
-const keselect = ($origin) => {
-  let selectedIndex = $origin.selectedIndex
-  let isOpen = false
-
-  // Get options data from inside original select element
-  const items = Object.values($origin.options).map($option => ({
-    label: $option.label,
-    value: $option.value
-  }))
-
+const createBaseElement = (items, $origin) => {
+  const selectedIndex = $origin.selectedIndex
   const defaultItem = items[selectedIndex]
   const isPlaceholderSelected = defaultItem.value === ''
 
@@ -62,6 +40,47 @@ const keselect = ($origin) => {
   const $optionWrapper = document.createElement('div')
   $optionWrapper.classList.add('keselect__option-wrapper')
   $dropdown.appendChild($optionWrapper)
+
+  return {
+    $container,
+    $selected,
+    $dropdown,
+    $search,
+    $optionWrapper
+  }
+}
+
+const createOptionsElement = (items, $optionWrapper) => {
+  items.forEach(item => {
+    const $option = document.createElement('div')
+    $option.classList.add('keselect__option')
+    $option.dataset.label = item.label
+    $option.dataset.value = item.value
+    $optionWrapper.appendChild($option)
+
+    const $label = document.createElement('p')
+    $label.textContent = item.label
+    $option.appendChild($label)
+  })
+}
+
+const keselect = ($origin) => {
+  let selectedIndex = $origin.selectedIndex
+  let isOpen = false
+
+  // Get options data from inside original select element
+  const items = Object.values($origin.options).map($option => ({
+    label: $option.label,
+    value: $option.value
+  }))
+
+  const {
+    $container,
+    $selected,
+    $dropdown,
+    $search,
+    $optionWrapper
+  } = createBaseElement(items, $origin)
 
   createOptionsElement(items, $optionWrapper)
 
