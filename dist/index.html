@@ -7,21 +7,30 @@
     <link rel="stylesheet" href="./keselect.min.css">
     <style>
       body {
+        margin: 0px;
+        padding: 0px;
+      }
+
+      .container {
+        height: 100vh;
         padding: 16px;
+        box-sizing: border-box;
       }
     </style>
   </head>
 
   <body>
-    <select name="language_id" id="languages">
-      <option value="">Select Languages</option>
-      <option value="1">Bahasa Indonesia</option>
-      <option value="2">Arabic</option>
-      <option value="3">English</option>
-      <option value="4">Japanese</option>
-      <option value="5">Chinese</option>
-      <option value="6">Russian</option>
-    </select>
+    <div class="container">
+      <select name="language_id" id="languages">
+        <option value="">Select Languages</option>
+        <option value="1">Bahasa Indonesia</option>
+        <option value="2">Arabic</option>
+        <option value="3">English</option>
+        <option value="4">Japanese</option>
+        <option value="5">Chinese</option>
+        <option value="6">Russian</option>
+      </select>
+    </div>
 
     <script src="./keselect.min.js"></script>
     <script>

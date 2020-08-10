@@ -21,10 +21,8 @@
   color: #aaa;
 }
 
-.keselect__content {
+.keselect__dropdown {
   width: 100%;
-  max-height: 240px;
-  overflow-y: auto;
   border: 1px solid #ced4da;
   border-radius: 4px;
   box-sizing: border-box;
@@ -33,11 +31,11 @@
   top: 48px;
 }
 
-.keselect__content--hide {
+.keselect__dropdown--hide {
   display: none;
 }
 
-.keselect__content--show {
+.keselect__dropdown--show {
   display: block;
 }
 
@@ -54,6 +52,12 @@
   box-sizing: border-box;
   font-family: Helvetica;
   font-size: 14px;
+}
+
+.keselect__option-wrapper {
+  overflow-y: auto;
+  max-height: 200px;
+  border-top: 1px solid #ced4da;
 }
 
 .keselect__option {

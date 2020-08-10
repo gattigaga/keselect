@@ -1,5 +1,19 @@
 import './styles.css'
 
+const createOptionsElement = (items, $optionWrapper) => {
+  items.forEach(item => {
+    const $option = document.createElement('div')
+    $option.classList.add('keselect__option')
+    $option.dataset.label = item.label
+    $option.dataset.value = item.value
+    $optionWrapper.appendChild($option)
+
+    const $label = document.createElement('p')
+    $label.textContent = item.label
+    $option.appendChild($label)
+  })
+}
+
 const keselect = ($origin) => {
   let selectedIndex = $origin.selectedIndex
   let isOpen = false
@@ -19,7 +33,7 @@ const keselect = ($origin) => {
   $origin.parentNode.insertBefore($container, $origin)
   $container.appendChild($origin)
 
-  // Create content element that contains options
+  // Create selected element that contains selected option or placeholder
   const $selected = document.createElement('p')
   $selected.classList.add('keselect__selected')
   $selected.textContent = defaultItem.label
@@ -30,50 +44,72 @@ const keselect = ($origin) => {
 
   $container.appendChild($selected)
 
-  // Create content element that contains options
-  const $content = document.createElement('div')
-  $content.classList.add('keselect__content', 'keselect__content--hide')
-  $container.appendChild($content)
+  // Create dropdown element
+  const $dropdown = document.createElement('div')
+  $dropdown.classList.add('keselect__dropdown', 'keselect__dropdown--hide')
+  $container.appendChild($dropdown)
 
   // Create searchbox to find options by keyword
   const $searchWrapper = document.createElement('div')
   $searchWrapper.classList.add('keselect__search-wrapper')
-  $content.appendChild($searchWrapper)
+  $dropdown.appendChild($searchWrapper)
 
   const $search = document.createElement('input')
   $search.classList.add('keselect__search')
   $searchWrapper.appendChild($search)
 
-  // Create options element inside content element
-  items.forEach(item => {
-    const $option = document.createElement('div')
-    $option.classList.add('keselect__option')
-    $option.dataset.label = item.label
-    $option.dataset.value = item.value
-    $content.appendChild($option)
+  // Create option wrapper element that contains option list
+  const $optionWrapper = document.createElement('div')
+  $optionWrapper.classList.add('keselect__option-wrapper')
+  $dropdown.appendChild($optionWrapper)
 
-    const $label = document.createElement('p')
-    $label.textContent = item.label
-    $option.appendChild($label)
-  })
+  createOptionsElement(items, $optionWrapper)
 
-  const $options = $content.querySelectorAll('.keselect__option')
+  const $options = $optionWrapper.querySelectorAll('.keselect__option')
 
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
     if (isOpen) {
-      $content.classList.remove('keselect__content--show')
-      $content.classList.add('keselect__content--hide')
+      $dropdown.classList.remove('keselect__dropdown--show')
+      $dropdown.classList.add('keselect__dropdown--hide')
+
+      $search.value = ''
+
+      const $options = $optionWrapper.querySelectorAll('.keselect__option')
+
+      const newItems = items.filter(item => {
+        const keyword = event.target.value
+        const pattern = new RegExp(keyword, 'ig')
+
+        return pattern.test(item.label)
+      })
+
+      $options.forEach($option => $option.remove())
+      createOptionsElement(newItems, $optionWrapper)
     } else {
-      $content.classList.remove('keselect__content--hide')
-      $content.classList.add('keselect__content--show')
+      $dropdown.classList.remove('keselect__dropdown--hide')
+      $dropdown.classList.add('keselect__dropdown--show')
     }
 
     isOpen = !isOpen
   })
 
-  $content.addEventListener('click', (event) => {
+  $dropdown.addEventListener('click', (event) => {
     event.stopPropagation()
+  })
+
+  $search.addEventListener('keyup', (event) => {
+    const $options = $optionWrapper.querySelectorAll('.keselect__option')
+
+    const newItems = items.filter(item => {
+      const keyword = event.target.value
+      const pattern = new RegExp(keyword, 'ig')
+
+      return pattern.test(item.label)
+    })
+
+    $options.forEach($option => $option.remove())
+    createOptionsElement(newItems, $optionWrapper)
   })
 
   $options.forEach(($option, index) => {
@@ -89,8 +125,8 @@ const keselect = ($origin) => {
         $selected.classList.add('keselect__selected--placeholder')
       }
 
-      $content.classList.remove('keselect__content--show')
-      $content.classList.add('keselect__content--hide')
+      $optionWrapper.classList.remove('keselect__dropdown--show')
+      $optionWrapper.classList.add('keselect__dropdown--hide')
 
       $selected.textContent = label
       $origin.selectedIndex = index
