@@ -123,6 +123,13 @@ const keselect = ($origin) => {
     $optionWrapper
   } = createBaseElements(items, $origin)
 
+  const viewportHeight = window.innerHeight
+  const containerOffset = $container.offsetTop + $container.offsetHeight
+  const diff = viewportHeight - containerOffset
+  const position = diff > 240 ? 'bottom' : 'top'
+
+  $dropdown.classList.add(`keselect__dropdown--${position}`)
+
   createOptionElements(items, $origin, () => {
     isOpen = false
   })
