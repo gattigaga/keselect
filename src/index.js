@@ -154,6 +154,7 @@ const keselect = ($origin) => {
     event.stopPropagation()
   })
 
+  // Filter the options by keyword
   $search.addEventListener('keyup', (event) => {
     const $options = $optionWrapper.querySelectorAll('.keselect__option')
 
@@ -187,6 +188,17 @@ const keselect = ($origin) => {
     createOptionElements(newItems, $origin, () => {
       isOpen = false
     })
+  })
+
+  document.addEventListener('keyup', (event) => {
+    const isEscPressed = event.keyCode === 27
+
+    if (isEscPressed) {
+      $dropdown.classList.remove('keselect__dropdown--show')
+      $dropdown.classList.add('keselect__dropdown--hide')
+
+      isOpen = false
+    }
   })
 }
 
