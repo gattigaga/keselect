@@ -54,6 +54,19 @@
   font-size: 14px;
 }
 
+.keselect__empty-wrapper {
+  height: 38px;
+  padding: 12px;
+  display: flex;
+  box-sizing: border-box;
+}
+
+.keselect__empty {
+  font-family: Helvetica;
+  font-size: 14px;
+  margin: auto;
+}
+
 .keselect__option-wrapper {
   overflow-y: auto;
   max-height: 200px;

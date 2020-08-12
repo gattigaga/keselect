@@ -165,6 +165,25 @@ const keselect = ($origin) => {
     })
 
     $options.forEach($option => $option.remove())
+
+    if (!newItems.length) {
+      // Remove existing wrapper for empty text
+      const $existingWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
+
+      if (!$existingWrapper) {
+        // Create wrapper for empty text
+        const $emptyWrapper = document.createElement('div')
+        $emptyWrapper.classList.add('keselect__empty-wrapper')
+        $dropdown.appendChild($emptyWrapper)
+
+        // Create empty text where data doesn't exists
+        const $empty = document.createElement('p')
+        $empty.classList.add('keselect__empty')
+        $empty.textContent = 'No data available'
+        $emptyWrapper.appendChild($empty)
+      }
+    }
+
     createOptionElements(newItems, $origin, () => {
       isOpen = false
     })
