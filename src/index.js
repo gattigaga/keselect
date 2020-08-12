@@ -197,10 +197,23 @@ const keselect = ($origin) => {
     })
   })
 
+  // Close dropdown if escape key has been pressed
   document.addEventListener('keyup', (event) => {
     const isEscPressed = event.keyCode === 27
 
     if (isEscPressed) {
+      $dropdown.classList.remove('keselect__dropdown--show')
+      $dropdown.classList.add('keselect__dropdown--hide')
+
+      isOpen = false
+    }
+  })
+
+  // Close dropdown if outside has been clicked
+  document.addEventListener('click', (event) => {
+    const isClickOutside = !$container.contains(event.target)
+
+    if (isClickOutside) {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
 
