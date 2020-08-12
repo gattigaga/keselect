@@ -1,7 +1,5 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const TerserJSPlugin = require('terser-webpack-plugin')
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -38,9 +36,5 @@ module.exports = {
     new MiniCssExtractPlugin({
       filename: 'keselect.min.css'
     })
-  ],
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserJSPlugin(), new OptimizeCSSAssetsPlugin()]
-  }
+  ]
 }
