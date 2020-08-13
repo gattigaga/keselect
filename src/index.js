@@ -139,6 +139,13 @@ const keselect = ($origin) => {
     if (isOpen) {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
+
+      // Remove existing wrapper for empty text
+      const $emptyWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
+
+      if ($emptyWrapper) {
+        $emptyWrapper.remove()
+      }
     } else {
       $dropdown.classList.remove('keselect__dropdown--hide')
       $dropdown.classList.add('keselect__dropdown--show')
@@ -164,6 +171,7 @@ const keselect = ($origin) => {
   // Filter the options by keyword
   $search.addEventListener('keyup', (event) => {
     const $options = $optionWrapper.querySelectorAll('.keselect__option')
+    const $emptyWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
 
     const newItems = items.filter(item => {
       const keyword = event.target.value
@@ -175,10 +183,7 @@ const keselect = ($origin) => {
     $options.forEach($option => $option.remove())
 
     if (!newItems.length) {
-      // Remove existing wrapper for empty text
-      const $existingWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
-
-      if (!$existingWrapper) {
+      if (!$emptyWrapper) {
         // Create wrapper for empty text
         const $emptyWrapper = document.createElement('div')
         $emptyWrapper.classList.add('keselect__empty-wrapper')
@@ -189,6 +194,10 @@ const keselect = ($origin) => {
         $empty.classList.add('keselect__empty')
         $empty.textContent = 'No data available'
         $emptyWrapper.appendChild($empty)
+      }
+    } else {
+      if ($emptyWrapper) {
+        $emptyWrapper.remove()
       }
     }
 
@@ -205,6 +214,13 @@ const keselect = ($origin) => {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
 
+      // Remove existing wrapper for empty text
+      const $emptyWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
+
+      if ($emptyWrapper) {
+        $emptyWrapper.remove()
+      }
+
       isOpen = false
     }
   })
@@ -216,6 +232,13 @@ const keselect = ($origin) => {
     if (isClickOutside) {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
+
+      // Remove existing wrapper for empty text
+      const $emptyWrapper = $dropdown.querySelector('.keselect__empty-wrapper')
+
+      if ($emptyWrapper) {
+        $emptyWrapper.remove()
+      }
 
       isOpen = false
     }
