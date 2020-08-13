@@ -65,10 +65,18 @@
 }
 
 .keselect__empty-wrapper {
-  height: 38px;
   padding: 12px;
   display: flex;
   box-sizing: border-box;
+  border-top: 1px solid #ced4da;
+}
+
+.keselect__empty-wrapper--hide {
+  display: none;
+}
+
+.keselect__empty-wrapper--show {
+  display: flex;
 }
 
 .keselect__empty {
