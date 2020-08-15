@@ -30,6 +30,7 @@ const createBaseElements = (items, $origin) => {
     $selected.classList.add('keselect__selected--placeholder')
   }
 
+  // Set dropdown open position based on container position
   const viewportHeight = window.innerHeight
   const containerOffset = $container.offsetTop + $container.offsetHeight
   const diff = viewportHeight - containerOffset
@@ -38,32 +39,33 @@ const createBaseElements = (items, $origin) => {
   $dropdown.classList.add(`keselect__dropdown--${position}`)
 }
 
-const createOptionElements = (items, $origin, onClickOption) => {
+const createOptionElements = (items, $origin) => {
   const $container = $origin.parentElement
   const $selected = $container.querySelector('.keselect__selected')
   const $dropdown = $container.querySelector('.keselect__dropdown')
   const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
 
-  // Create option elements
-  items.forEach(item => {
-    const $option = document.createElement('div')
-    $option.classList.add('keselect__option')
-    $option.dataset.index = item.index
-    $option.dataset.label = item.label
-    $option.dataset.value = item.value
+  $optionWrapper.innerHTML = `
+    ${items.map(item => {
+      const { index, label, value } = item
+      const isSelected = item.index === $origin.selectedIndex
+      const selectedClass = isSelected ? 'keselect__option--selected' : ''
 
-    if (item.index === $origin.selectedIndex) {
-      $option.classList.add('keselect__option--selected')
-    }
-
-    $optionWrapper.appendChild($option)
-
-    const $label = document.createElement('p')
-    $label.textContent = item.label
-    $option.appendChild($label)
-  })
+      return `
+        <div 
+          class="keselect__option ${selectedClass}"
+          data-index="${index}"
+          data-label="${label}"
+          data-value="${value}"
+        >
+          <p>${label}</p>
+        </div>
+      `
+    }).join('\n')}
+  `
 
   const $options = $optionWrapper.querySelectorAll('.keselect__option')
+  const openDropdown = createToggleDropdown($dropdown)
 
   // Assign event listener to all option elements
   $options.forEach(($option) => {
@@ -84,20 +86,41 @@ const createOptionElements = (items, $origin, onClickOption) => {
         $selected.classList.remove('keselect__selected--placeholder')
       }
 
-      $dropdown.classList.remove('keselect__dropdown--show')
-      $dropdown.classList.add('keselect__dropdown--hide')
-
       $selected.textContent = label
       $origin.selectedIndex = index
 
-      onClickOption()
+      openDropdown(false)
     })
   })
 }
 
-const keselect = ($origin) => {
-  let isOpen = false
+const createToggleDropdown = ($dropdown) => (isOpen) => {
+  if (isOpen) {
+    $dropdown.classList.remove('keselect__dropdown--hide')
+    $dropdown.classList.add('keselect__dropdown--show')
+  } else {
+    $dropdown.classList.remove('keselect__dropdown--show')
+    $dropdown.classList.add('keselect__dropdown--hide')
+  }
+}
 
+const createToggleEmptyText = ($emptyWrapper) => (isShow) => {
+  if (isShow) {
+    $emptyWrapper.classList.remove('keselect__empty-wrapper--hide')
+    $emptyWrapper.classList.add('keselect__empty-wrapper--show')
+  } else {
+    $emptyWrapper.classList.remove('keselect__empty-wrapper--show')
+    $emptyWrapper.classList.add('keselect__empty-wrapper--hide')
+  }
+}
+
+const removeOptionElements = ($optionWrapper) => {
+  $optionWrapper
+    .querySelectorAll('.keselect__option')
+    .forEach($option => $option.remove())
+}
+
+const keselect = ($origin) => {
   // Get options data from inside original select element
   const items = Object.values($origin.options).map(($option, index) => ({
     index,
@@ -113,33 +136,24 @@ const keselect = ($origin) => {
   const $emptyWrapper = $container.querySelector('.keselect__empty-wrapper')
   const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
 
-  createOptionElements(items, $origin, () => {
-    isOpen = false
-  })
+  createOptionElements(items, $origin)
+
+  const openDropdown = createToggleDropdown($dropdown)
+  const showEmptyText = createToggleEmptyText($emptyWrapper)
 
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
-    if (isOpen) {
-      $dropdown.classList.remove('keselect__dropdown--show')
-      $dropdown.classList.add('keselect__dropdown--hide')
-    } else {
-      $dropdown.classList.remove('keselect__dropdown--hide')
-      $dropdown.classList.add('keselect__dropdown--show')
+    const isDropdownOpen = $dropdown.classList.contains('keselect__dropdown--show')
 
-      $emptyWrapper.classList.remove('keselect__empty-wrapper--show')
-      $emptyWrapper.classList.add('keselect__empty-wrapper--hide')
+    openDropdown(!isDropdownOpen)
 
+    if (!isDropdownOpen) {
       $search.value = ''
 
-      const $options = $optionWrapper.querySelectorAll('.keselect__option')
-
-      $options.forEach($option => $option.remove())
-      createOptionElements(items, $origin, () => {
-        isOpen = false
-      })
+      showEmptyText(false)
+      removeOptionElements($optionWrapper)
+      createOptionElements(items, $origin)
     }
-
-    isOpen = !isOpen
   })
 
   // Prevent event bubbling when dropdown clicked
@@ -149,8 +163,6 @@ const keselect = ($origin) => {
 
   // Filter the options by keyword
   $search.addEventListener('keyup', (event) => {
-    const $options = $optionWrapper.querySelectorAll('.keselect__option')
-
     const newItems = items.filter(item => {
       const keyword = event.target.value
       const pattern = new RegExp(keyword, 'ig')
@@ -158,19 +170,9 @@ const keselect = ($origin) => {
       return pattern.test(item.label)
     })
 
-    if (!newItems.length) {
-      $emptyWrapper.classList.add('keselect__empty-wrapper--show')
-      $emptyWrapper.classList.remove('keselect__empty-wrapper--hide')
-    } else {
-      $emptyWrapper.classList.add('keselect__empty-wrapper--hide')
-      $emptyWrapper.classList.remove('keselect__empty-wrapper--show')
-    }
-
-    $options.forEach($option => $option.remove())
-
-    createOptionElements(newItems, $origin, () => {
-      isOpen = false
-    })
+    removeOptionElements($optionWrapper)
+    createOptionElements(newItems, $origin)
+    showEmptyText(!newItems.length)
   })
 
   // Close dropdown if escape key has been pressed
@@ -178,10 +180,7 @@ const keselect = ($origin) => {
     const isEscPressed = event.keyCode === 27
 
     if (isEscPressed) {
-      $dropdown.classList.remove('keselect__dropdown--show')
-      $dropdown.classList.add('keselect__dropdown--hide')
-
-      isOpen = false
+      openDropdown(false)
     }
   })
 
@@ -190,10 +189,7 @@ const keselect = ($origin) => {
     const isClickOutside = !$container.contains(event.target)
 
     if (isClickOutside) {
-      $dropdown.classList.remove('keselect__dropdown--show')
-      $dropdown.classList.add('keselect__dropdown--hide')
-
-      isOpen = false
+      openDropdown(false)
     }
   })
 
