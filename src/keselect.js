@@ -121,6 +121,13 @@ const removeOptionElements = ($optionWrapper) => {
 }
 
 const keselect = ($origin) => {
+  const isValidElement = $origin instanceof HTMLElement
+
+  if (!isValidElement) {
+    console.error('Passed element is not a valid HTML element.')
+    return
+  }
+
   // Get options data from inside original select element
   const items = Object.values($origin.options).map(($option, index) => ({
     index,
