@@ -1,14 +1,14 @@
 const createBaseElements = (items, $origin) => {
-  const selectedIndex = $origin.selectedIndex
-  const defaultItem = items[selectedIndex]
-  const isPlaceholderSelected = defaultItem.value === ''
+  const defaultItem = items[$origin.selectedIndex]
+  const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
+  const selectedLabel = defaultItem ? defaultItem.label : ''
 
   // Create container to wrap and hide original select element
   const $container = document.createElement('div')
   $container.classList.add('keselect')
 
   $container.innerHTML = `
-    <p class="keselect__selected">${defaultItem.label}</p>
+    <p class="keselect__selected">${selectedLabel}</p>
     <div class="keselect__dropdown keselect__dropdown--hide">
       <div class="keselect__search-wrapper">
         <input class="keselect__search" type="text" value="" />
@@ -150,7 +150,7 @@ const keselect = ($origin) => {
     if (!isDropdownOpen) {
       $search.value = ''
 
-      showEmptyText(false)
+      showEmptyText(!items.length)
       removeOptionElements($optionWrapper)
       createOptionElements(items, $origin)
     }
