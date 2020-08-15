@@ -6,57 +6,36 @@ const createBaseElements = (items, $origin) => {
   // Create container to wrap and hide original select element
   const $container = document.createElement('div')
   $container.classList.add('keselect')
-  $origin.parentNode.insertBefore($container, $origin)
-  $container.appendChild($origin)
 
-  // Create selected element that contains selected option or placeholder
-  const $selected = document.createElement('p')
-  $selected.classList.add('keselect__selected')
-  $selected.textContent = defaultItem.label
+  $container.innerHTML = `
+    <p class="keselect__selected">${defaultItem.label}</p>
+    <div class="keselect__dropdown keselect__dropdown--hide">
+      <div class="keselect__search-wrapper">
+        <input class="keselect__search" type="text" value="" />
+      </div>
+      <div class="keselect__empty-wrapper keselect__empty-wrapper--hide">
+        <p class="keselect__empty">No data available</p>
+      </div>
+      <div class="keselect__option-wrapper"></div>
+    </div>
+  `
+
+  const $selected = $container.querySelector('.keselect__selected')
+  const $dropdown = $container.querySelector('.keselect__dropdown')
+
+  $origin.parentNode.insertBefore($container, $origin)
+  $container.prepend($origin)
 
   if (isPlaceholderSelected) {
     $selected.classList.add('keselect__selected--placeholder')
   }
 
-  $container.appendChild($selected)
+  const viewportHeight = window.innerHeight
+  const containerOffset = $container.offsetTop + $container.offsetHeight
+  const diff = viewportHeight - containerOffset
+  const position = diff > 240 ? 'bottom' : 'top'
 
-  // Create dropdown element
-  const $dropdown = document.createElement('div')
-  $dropdown.classList.add('keselect__dropdown', 'keselect__dropdown--hide')
-  $container.appendChild($dropdown)
-
-  // Create searchbox to find options by keyword
-  const $searchWrapper = document.createElement('div')
-  $searchWrapper.classList.add('keselect__search-wrapper')
-  $dropdown.appendChild($searchWrapper)
-
-  const $search = document.createElement('input')
-  $search.classList.add('keselect__search')
-  $searchWrapper.appendChild($search)
-
-  // Create empty text to indicate filtered options doesn't exists
-  const $emptyWrapper = document.createElement('div')
-  $emptyWrapper.classList.add('keselect__empty-wrapper')
-  $emptyWrapper.classList.add('keselect__empty-wrapper--hide')
-  $dropdown.appendChild($emptyWrapper)
-
-  const $empty = document.createElement('p')
-  $empty.classList.add('keselect__empty')
-  $empty.textContent = 'No data available'
-  $emptyWrapper.appendChild($empty)
-
-  // Create option wrapper element that contains option list
-  const $optionWrapper = document.createElement('div')
-  $optionWrapper.classList.add('keselect__option-wrapper')
-  $dropdown.appendChild($optionWrapper)
-
-  return {
-    $container,
-    $dropdown,
-    $search,
-    $emptyWrapper,
-    $optionWrapper
-  }
+  $dropdown.classList.add(`keselect__dropdown--${position}`)
 }
 
 const createOptionElements = (items, $origin, onClickOption) => {
@@ -126,20 +105,13 @@ const keselect = ($origin) => {
     value: $option.value
   }))
 
-  const {
-    $container,
-    $dropdown,
-    $search,
-    $optionWrapper,
-    $emptyWrapper
-  } = createBaseElements(items, $origin)
+  createBaseElements(items, $origin)
 
-  const viewportHeight = window.innerHeight
-  const containerOffset = $container.offsetTop + $container.offsetHeight
-  const diff = viewportHeight - containerOffset
-  const position = diff > 240 ? 'bottom' : 'top'
-
-  $dropdown.classList.add(`keselect__dropdown--${position}`)
+  const $container = $origin.parentElement
+  const $dropdown = $container.querySelector('.keselect__dropdown')
+  const $search = $container.querySelector('.keselect__search')
+  const $emptyWrapper = $container.querySelector('.keselect__empty-wrapper')
+  const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
 
   createOptionElements(items, $origin, () => {
     isOpen = false
