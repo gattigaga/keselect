@@ -33,6 +33,7 @@
   color: #aaa;
   margin-left: 16px;
   font-size: 18px;
+  user-select: none;
 }
 
 .keselect__selected--placeholder {
