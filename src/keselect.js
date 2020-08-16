@@ -8,7 +8,10 @@ const createBaseElements = (items, $origin) => {
   $container.classList.add('keselect')
 
   $container.innerHTML = `
-    <p class="keselect__selected">${selectedLabel}</p>
+    <div class="keselect__selected-wrapper">
+      <p class="keselect__selected">${selectedLabel}</p>
+      <span class="keselect__arrow">&dtrif;</span>
+    </div>
     <div class="keselect__dropdown keselect__dropdown--hide">
       <div class="keselect__search-wrapper">
         <input class="keselect__search" type="text" value="" />
