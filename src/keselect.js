@@ -1,3 +1,5 @@
+import { debounce } from 'debounce'
+
 const createBaseElements = (items, $origin) => {
   const defaultItem = items[$origin.selectedIndex]
   const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
@@ -123,13 +125,15 @@ const removeOptionElements = ($optionWrapper) => {
     .forEach($option => $option.remove())
 }
 
-const keselect = ($origin) => {
+const keselect = ($origin, options = {}) => {
   const isValidElement = $origin instanceof HTMLElement
 
   if (!isValidElement) {
     console.error('Passed element is not a valid HTML element.')
     return
   }
+
+  const { fetchItems } = options
 
   // Get options data from inside original select element
   const items = Object.values($origin.options).map(($option, index) => ({
@@ -144,7 +148,12 @@ const keselect = ($origin) => {
   const $dropdown = $container.querySelector('.keselect__dropdown')
   const $search = $container.querySelector('.keselect__search')
   const $emptyWrapper = $container.querySelector('.keselect__empty-wrapper')
+  const $empty = $container.querySelector('.keselect__empty')
   const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
+
+  if (fetchItems) {
+    $empty.textContent = 'Enter a keyword to find options'
+  }
 
   createOptionElements(items, $origin)
 
@@ -172,17 +181,44 @@ const keselect = ($origin) => {
   })
 
   // Filter the options by keyword
-  $search.addEventListener('keyup', (event) => {
-    const newItems = items.filter(item => {
-      const keyword = event.target.value
-      const pattern = new RegExp(keyword, 'ig')
+  $search.addEventListener('input', (event) => {
+    const keyword = event.target.value
 
-      return pattern.test(item.label)
-    })
+    if (fetchItems) {
+      if (keyword.length >= 1) {
+        $empty.textContent = 'Searching...'
 
-    removeOptionElements($optionWrapper)
-    createOptionElements(newItems, $origin)
-    showEmptyText(!newItems.length)
+        showEmptyText(true)
+        removeOptionElements($optionWrapper)
+
+        const runFetchItems = () => {
+          fetchItems(keyword, (items) => {
+            $empty.textContent = 'No data available'
+
+            removeOptionElements($optionWrapper)
+            createOptionElements(items, $origin)
+            showEmptyText(!items.length)
+          })
+        }
+
+        debounce(runFetchItems, 500)()
+      } else {
+        $empty.textContent = 'Enter a keyword to find options'
+
+        removeOptionElements($optionWrapper)
+        showEmptyText(true)
+      }
+    } else {
+      const newItems = items.filter(item => {
+        const pattern = new RegExp(keyword, 'ig')
+
+        return pattern.test(item.label)
+      })
+
+      removeOptionElements($optionWrapper)
+      createOptionElements(newItems, $origin)
+      showEmptyText(!newItems.length)
+    }
   })
 
   // Close dropdown if escape key has been pressed
