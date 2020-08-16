@@ -41,7 +41,9 @@
     "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^5.0.9"
   },
-  "dependencies": {},
+  "dependencies": {
+    "debounce": "^1.2.0"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged"
