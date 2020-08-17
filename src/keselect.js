@@ -18,8 +18,8 @@ const createBaseElements = (items, $origin) => {
       <div class="keselect__search-wrapper">
         <input class="keselect__search" type="text" value="" />
       </div>
-      <div class="keselect__empty-wrapper keselect__empty-wrapper--hide">
-        <p class="keselect__empty">No data available</p>
+      <div class="keselect__message-wrapper keselect__message-wrapper--hide">
+        <p class="keselect__message">No data available</p>
       </div>
       <div class="keselect__option-wrapper"></div>
     </div>
@@ -109,13 +109,13 @@ const createToggleDropdown = ($dropdown) => (isOpen) => {
   }
 }
 
-const createToggleEmptyText = ($emptyWrapper) => (isShow) => {
+const createToggleMessageText = ($messageWrapper) => (isShow) => {
   if (isShow) {
-    $emptyWrapper.classList.remove('keselect__empty-wrapper--hide')
-    $emptyWrapper.classList.add('keselect__empty-wrapper--show')
+    $messageWrapper.classList.remove('keselect__message-wrapper--hide')
+    $messageWrapper.classList.add('keselect__message-wrapper--show')
   } else {
-    $emptyWrapper.classList.remove('keselect__empty-wrapper--show')
-    $emptyWrapper.classList.add('keselect__empty-wrapper--hide')
+    $messageWrapper.classList.remove('keselect__message-wrapper--show')
+    $messageWrapper.classList.add('keselect__message-wrapper--hide')
   }
 }
 
@@ -147,18 +147,18 @@ const keselect = ($origin, options = {}) => {
   const $container = $origin.parentElement
   const $dropdown = $container.querySelector('.keselect__dropdown')
   const $search = $container.querySelector('.keselect__search')
-  const $emptyWrapper = $container.querySelector('.keselect__empty-wrapper')
-  const $empty = $container.querySelector('.keselect__empty')
+  const $messageWrapper = $container.querySelector('.keselect__message-wrapper')
+  const $message = $container.querySelector('.keselect__message')
   const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
 
   if (fetchItems) {
-    $empty.textContent = 'Enter a keyword to find options'
+    $message.textContent = 'Enter a keyword to find options'
   }
 
   createOptionElements(items, $origin)
 
   const openDropdown = createToggleDropdown($dropdown)
-  const showEmptyText = createToggleEmptyText($emptyWrapper)
+  const showMessageText = createToggleMessageText($messageWrapper)
 
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
@@ -169,7 +169,7 @@ const keselect = ($origin, options = {}) => {
     if (!isDropdownOpen) {
       $search.value = ''
 
-      showEmptyText(!items.length)
+      showMessageText(!items.length)
       removeOptionElements($optionWrapper)
       createOptionElements(items, $origin)
     }
@@ -186,27 +186,27 @@ const keselect = ($origin, options = {}) => {
 
     if (fetchItems) {
       if (keyword.length >= 1) {
-        $empty.textContent = 'Searching...'
+        $message.textContent = 'Searching...'
 
-        showEmptyText(true)
+        showMessageText(true)
         removeOptionElements($optionWrapper)
 
         const runFetchItems = () => {
           fetchItems(keyword, (items) => {
-            $empty.textContent = 'No data available'
+            $message.textContent = 'No data available'
 
             removeOptionElements($optionWrapper)
             createOptionElements(items, $origin)
-            showEmptyText(!items.length)
+            showMessageText(!items.length)
           })
         }
 
         debounce(runFetchItems, 500)()
       } else {
-        $empty.textContent = 'Enter a keyword to find options'
+        $message.textContent = 'Enter a keyword to find options'
 
         removeOptionElements($optionWrapper)
-        showEmptyText(true)
+        showMessageText(true)
       }
     } else {
       const newItems = items.filter(item => {
@@ -217,7 +217,7 @@ const keselect = ($origin, options = {}) => {
 
       removeOptionElements($optionWrapper)
       createOptionElements(newItems, $origin)
-      showEmptyText(!newItems.length)
+      showMessageText(!newItems.length)
     }
   })
 

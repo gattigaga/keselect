@@ -82,22 +82,22 @@
   font-size: 14px;
 }
 
-.keselect__empty-wrapper {
+.keselect__message-wrapper {
   padding: 12px;
   display: flex;
   box-sizing: border-box;
   border-top: 1px solid #ced4da;
 }
 
-.keselect__empty-wrapper--hide {
+.keselect__message-wrapper--hide {
   display: none;
 }
 
-.keselect__empty-wrapper--show {
+.keselect__message-wrapper--show {
   display: flex;
 }
 
-.keselect__empty {
+.keselect__message {
   font-family: Helvetica;
   font-size: 14px;
   margin: auto;
