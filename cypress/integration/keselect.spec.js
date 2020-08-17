@@ -19,7 +19,7 @@ describe('Keselect', () => {
   it('should filter the option list and not found an option', () => {
     cy.get('.keselect__selected').contains('Select Language').click()
     cy.get('.keselect__search').type('French')
-    cy.get('.keselect__empty-wrapper').should('be.visible')
+    cy.get('.keselect__message-wrapper').should('be.visible')
   })
 
   it('should open the dropdown and close by pressing esc key', () => {

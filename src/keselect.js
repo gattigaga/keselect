@@ -1,17 +1,12 @@
 import { debounce } from 'debounce'
 
-const createBaseElements = (items, $origin) => {
-  const defaultItem = items[$origin.selectedIndex]
-  const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
-  const selectedLabel = defaultItem ? defaultItem.label : ''
-
-  // Create container to wrap and hide original select element
+const createBaseElements = ($origin) => {
   const $container = document.createElement('div')
   $container.classList.add('keselect')
 
   $container.innerHTML = `
     <div class="keselect__selected-wrapper">
-      <p class="keselect__selected">${selectedLabel}</p>
+      <p class="keselect__selected"></p>
       <span class="keselect__arrow">&dtrif;</span>
     </div>
     <div class="keselect__dropdown keselect__dropdown--hide">
@@ -19,25 +14,14 @@ const createBaseElements = (items, $origin) => {
         <input class="keselect__search" type="text" value="" />
       </div>
       <div class="keselect__message-wrapper keselect__message-wrapper--hide">
-        <p class="keselect__message">No data available</p>
+        <p class="keselect__message"></p>
       </div>
       <div class="keselect__option-wrapper"></div>
     </div>
   `
 
-  const $selected = $container.querySelector('.keselect__selected')
-  const $dropdown = $container.querySelector('.keselect__dropdown')
-
   $origin.parentNode.insertBefore($container, $origin)
   $container.prepend($origin)
-
-  if (isPlaceholderSelected) {
-    $selected.classList.add('keselect__selected--placeholder')
-  }
-
-  const position = getDropdownPosition($container)
-
-  $dropdown.classList.add(`keselect__dropdown--${position}`)
 }
 
 const createOptionElements = (items, $origin) => {
@@ -135,28 +119,50 @@ const keselect = ($origin, options = {}) => {
 
   if (!isValidElement) {
     console.error('Passed element is not a valid HTML element.')
-    return
+    return null
   }
 
-  const { fetchItems } = options
+  const $rawOptions = Object.values($origin.options)
 
   // Get options data from inside original select element
-  const items = Object
-    .values($origin.options)
-    .map(($option, index) => ({
-      index,
-      label: $option.label,
-      value: $option.value
-    }))
+  const items = $rawOptions.map(($option, index) => ({
+    index,
+    label: $option.label,
+    value: $option.value
+  }))
 
-  createBaseElements(items, $origin)
+  createBaseElements($origin)
 
   const $container = $origin.parentElement
-  const $dropdown = $container.querySelector('.keselect__dropdown')
-  const $search = $container.querySelector('.keselect__search')
-  const $messageWrapper = $container.querySelector('.keselect__message-wrapper')
-  const $message = $container.querySelector('.keselect__message')
-  const $optionWrapper = $container.querySelector('.keselect__option-wrapper')
+
+  const [
+    $selected,
+    $dropdown,
+    $search,
+    $messageWrapper,
+    $message,
+    $optionWrapper
+  ] = [
+    $container.querySelector('.keselect__selected'),
+    $container.querySelector('.keselect__dropdown'),
+    $container.querySelector('.keselect__search'),
+    $container.querySelector('.keselect__message-wrapper'),
+    $container.querySelector('.keselect__message'),
+    $container.querySelector('.keselect__option-wrapper')
+  ]
+
+  const defaultItem = items[$origin.selectedIndex]
+  const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
+  const selectedLabel = defaultItem ? defaultItem.label : ''
+  const position = getDropdownPosition($container)
+
+  if (isPlaceholderSelected) {
+    $selected.classList.add('keselect__selected--placeholder')
+  }
+
+  $selected.textContent = selectedLabel
+  $message.textContent = 'No data available'
+  $dropdown.classList.add(`keselect__dropdown--${position}`)
 
   if (fetchItems) {
     $message.textContent = 'Enter a keyword to find options'
