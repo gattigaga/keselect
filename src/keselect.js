@@ -35,11 +35,7 @@ const createBaseElements = (items, $origin) => {
     $selected.classList.add('keselect__selected--placeholder')
   }
 
-  // Set dropdown open position based on container position
-  const viewportHeight = window.innerHeight
-  const containerOffset = $container.offsetTop + $container.offsetHeight
-  const diff = viewportHeight - containerOffset
-  const position = diff > 240 ? 'bottom' : 'top'
+  const position = getDropdownPosition($container)
 
   $dropdown.classList.add(`keselect__dropdown--${position}`)
 }
@@ -125,6 +121,15 @@ const removeOptionElements = ($optionWrapper) => {
     .forEach($option => $option.remove())
 }
 
+const getDropdownPosition = ($container) => {
+  const viewportHeight = window.innerHeight
+  const containerOffset = $container.offsetTop + $container.offsetHeight
+  const diff = viewportHeight - containerOffset
+  const position = diff > 240 ? 'bottom' : 'top'
+
+  return position
+}
+
 const keselect = ($origin, options = {}) => {
   const isValidElement = $origin instanceof HTMLElement
 
@@ -136,11 +141,13 @@ const keselect = ($origin, options = {}) => {
   const { fetchItems } = options
 
   // Get options data from inside original select element
-  const items = Object.values($origin.options).map(($option, index) => ({
-    index,
-    label: $option.label,
-    value: $option.value
-  }))
+  const items = Object
+    .values($origin.options)
+    .map(($option, index) => ({
+      index,
+      label: $option.label,
+      value: $option.value
+    }))
 
   createBaseElements(items, $origin)
 
