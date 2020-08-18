@@ -24,7 +24,7 @@ const createBaseElements = ($origin) => {
   $container.prepend($origin)
 }
 
-const createOptionElements = (items, $origin) => {
+const createOptionElements = (items, $origin, isAjaxUsed = false) => {
   const $container = $origin.parentElement
   const $selected = $container.querySelector('.keselect__selected')
   const $dropdown = $container.querySelector('.keselect__dropdown')
@@ -33,7 +33,7 @@ const createOptionElements = (items, $origin) => {
   $optionWrapper.innerHTML = `
     ${items.map(item => {
       const { index, label, value } = item
-      const isSelected = item.index === $origin.selectedIndex
+      const isSelected = isAjaxUsed ? false : item.index === $origin.selectedIndex
       const selectedClass = isSelected ? 'keselect__option--selected' : ''
 
       return `
@@ -72,7 +72,16 @@ const createOptionElements = (items, $origin) => {
       }
 
       $selected.textContent = label
-      $origin.selectedIndex = index
+
+      if (isAjaxUsed) {
+        $origin.innerHTML = `
+          <option value="${value}" selected>
+            ${label}
+          </option>
+        `
+      } else {
+        $origin.selectedIndex = index
+      }
 
       openDropdown(false)
     })
@@ -122,18 +131,22 @@ const keselect = ($origin, options = {}) => {
     return null
   }
 
+  const { isAjaxUsed, onSearch } = options
   const $rawOptions = Object.values($origin.options)
 
   // Get options data from inside original select element
-  const items = $rawOptions.map(($option, index) => ({
-    index,
-    label: $option.label,
-    value: $option.value
-  }))
+  const items = $rawOptions
+    .filter(() => !isAjaxUsed)
+    .map(($option, index) => ({
+      index,
+      label: $option.label,
+      value: $option.value
+    }))
 
   createBaseElements($origin)
 
   const $container = $origin.parentElement
+  const position = getDropdownPosition($container)
 
   const [
     $selected,
@@ -151,24 +164,40 @@ const keselect = ($origin, options = {}) => {
     $container.querySelector('.keselect__option-wrapper')
   ]
 
-  const defaultItem = items[$origin.selectedIndex]
-  const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
-  const selectedLabel = defaultItem ? defaultItem.label : ''
-  const position = getDropdownPosition($container)
-
-  if (isPlaceholderSelected) {
-    $selected.classList.add('keselect__selected--placeholder')
-  }
-
-  $selected.textContent = selectedLabel
-  $message.textContent = 'No data available'
   $dropdown.classList.add(`keselect__dropdown--${position}`)
 
-  if (fetchItems) {
-    $message.textContent = 'Enter a keyword to find options'
-  }
+  if (isAjaxUsed) {
+    const $defaultItem = $rawOptions.find(($option, index) => !index)
+    const selectedLabel = $defaultItem ? $defaultItem.label : ''
 
-  createOptionElements(items, $origin)
+    if ($defaultItem && !$defaultItem.value) {
+      $selected.classList.add('keselect__selected--placeholder')
+    }
+
+    $selected.textContent = selectedLabel
+    $message.textContent = 'Enter a keyword to find options'
+
+    $origin
+      .querySelectorAll('option')
+      .forEach(($option, index) => {
+        if (!index) return
+
+        $option.remove()
+      })
+  } else {
+    const defaultItem = items[$origin.selectedIndex]
+    const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
+    const selectedLabel = defaultItem ? defaultItem.label : ''
+
+    if (isPlaceholderSelected) {
+      $selected.classList.add('keselect__selected--placeholder')
+    }
+
+    $selected.textContent = selectedLabel
+    $message.textContent = 'No data available'
+
+    createOptionElements(items, $origin)
+  }
 
   const openDropdown = createToggleDropdown($dropdown)
   const showMessageText = createToggleMessageText($messageWrapper)
@@ -197,24 +226,24 @@ const keselect = ($origin, options = {}) => {
   $search.addEventListener('input', (event) => {
     const keyword = event.target.value
 
-    if (fetchItems) {
+    if (isAjaxUsed) {
       if (keyword.length >= 1) {
         $message.textContent = 'Searching...'
 
         showMessageText(true)
         removeOptionElements($optionWrapper)
 
-        const runFetchItems = () => {
-          fetchItems(keyword, (items) => {
+        const fetchItems = () => {
+          onSearch(keyword, (newItems) => {
             $message.textContent = 'No data available'
 
             removeOptionElements($optionWrapper)
-            createOptionElements(items, $origin)
-            showMessageText(!items.length)
+            createOptionElements(newItems, $origin, isAjaxUsed)
+            showMessageText(!newItems.length)
           })
         }
 
-        debounce(runFetchItems, 500)()
+        debounce(fetchItems, 500)()
       } else {
         $message.textContent = 'Enter a keyword to find options'
 
