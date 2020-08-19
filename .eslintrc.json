@@ -7,7 +7,8 @@
   "extends": [
     "standard",
     "plugin:jest/recommended",
-    "plugin:cypress/recommended"
+    "plugin:jest-dom/recommended",
+    "plugin:testing-library/recommended"
   ],
   "parserOptions": {
     "ecmaVersion": 11,
