@@ -1,7 +1,7 @@
 {
   "name": "keselect",
   "version": "1.0.0",
-  "description": "Keselect is improved selectbox with search features",
+  "description": "Keselect is a zero dependencies improved selectbox that have feature to search the options",
   "main": "index.js",
   "scripts": {
     "test": "jest",
@@ -10,8 +10,16 @@
     "preserve": "npm run build",
     "serve": "http-server ./dist"
   },
-  "author": "Gattigaga Hayyuta Dewa",
+  "author": "Gattigaga Hayyuta Dewa <gattigaga@gmail.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gattigaga/keselect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/gattigaga/keselect/issues"
+  },
+  "homepage": "https://github.com/gattigaga/keselect",
   "devDependencies": {
     "@babel/core": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
