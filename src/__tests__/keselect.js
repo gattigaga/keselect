@@ -1,5 +1,5 @@
 
-import { getByText, fireEvent } from '@testing-library/dom'
+import { getByText, fireEvent, waitFor, prettyDOM } from '@testing-library/dom'
 
 import keselect from '../keselect'
 
@@ -124,6 +124,136 @@ describe('Keselect', () => {
       fireEvent.click(document)
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
+    })
+  })
+
+  describe('Ajax', () => {
+    const initDOM = () => {
+      const $container = document.createElement('div')
+
+      $container.innerHTML = `
+        <select name="language_id" id="languages">
+          <option value="">Select Language</option>
+        </select>
+      `
+
+      const $select = $container.querySelector('select')
+
+      return keselect($select, {
+        isAjaxUsed: true,
+        onSearch: (keyword, setItems) => {
+          const items = [
+            {
+              index: 1,
+              label: 'Bahasa Indonesia',
+              value: 1
+            },
+            {
+              index: 2,
+              label: 'Arabic',
+              value: 2
+            },
+            {
+              index: 3,
+              label: 'English',
+              value: 3
+            },
+            {
+              index: 4,
+              label: 'Japanese',
+              value: 4
+            },
+            {
+              index: 5,
+              label: 'Chinese',
+              value: 5
+            },
+            {
+              index: 6,
+              label: 'Russian',
+              value: 6
+            }
+          ].filter(item => {
+            const pattern = new RegExp(keyword, 'ig')
+            const isMatch = pattern.test(item.label)
+
+            return isMatch
+          })
+
+          setTimeout(() => {
+            setItems(items)
+          }, 1000)
+        }
+      })
+    }
+
+    it('should open the dropdown, filter and select an option', async () => {
+      const $select = initDOM()
+      const $selected = $select.querySelector('.keselect__selected')
+      const $search = $select.querySelector('.keselect__search')
+      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
+      const $message = $select.querySelector('.keselect__message')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+      expect($messageWrapper).toHaveClass('keselect__message-wrapper--show')
+      expect($message).toHaveTextContent('Enter a keyword to find options')
+
+      fireEvent.input($search, {
+        target: {
+          value: 'Jap'
+        }
+      })
+
+      expect($message).toHaveTextContent('Searching...')
+
+      await waitFor(() => {
+        expect($messageWrapper).toHaveClass('keselect__message-wrapper--hide')
+      }, {
+        container: $select,
+        timeout: 2000
+      })
+
+      getByText($dropdown, 'Japanese').click()
+
+      expect($selected).toHaveTextContent('Japanese')
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+    })
+
+    it('should filter and not found an option', async () => {
+      const $select = initDOM()
+      const $selected = $select.querySelector('.keselect__selected')
+      const $search = $select.querySelector('.keselect__search')
+      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
+      const $message = $select.querySelector('.keselect__message')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+      expect($messageWrapper).toHaveClass('keselect__message-wrapper--show')
+      expect($message).toHaveTextContent('Enter a keyword to find options')
+
+      fireEvent.input($search, {
+        target: {
+          value: 'Fre'
+        }
+      })
+
+      expect($message).toHaveTextContent('Searching...')
+
+      await waitFor(() => {
+        expect($message).toHaveTextContent('No data available')
+      }, {
+        container: $select,
+        timeout: 2000
+      })
     })
   })
 })
