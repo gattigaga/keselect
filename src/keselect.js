@@ -1,7 +1,15 @@
 import { debounce } from 'debounce'
 
+/**
+ * Create base elements that wraps the raw select element.
+ * After this function called, you can access the elements from the DOM.
+ *
+ * @param {HTMLSelectElement} $origin Raw select element.
+ * @return {undefined}
+ */
 const createBaseElements = ($origin) => {
   const $container = document.createElement('div')
+
   $container.classList.add('keselect')
 
   $container.innerHTML = `
