@@ -8,8 +8,7 @@
     "start": "webpack-dev-server --open --config webpack.dev.js",
     "build": "webpack --config webpack.prod.js",
     "preserve": "npm run build",
-    "serve": "http-server ./dist",
-    "cypress": "cypress open"
+    "serve": "http-server ./dist"
   },
   "author": "Gattigaga Hayyuta Dewa",
   "license": "MIT",
