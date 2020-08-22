@@ -1,11 +1,11 @@
 
-import { getByText, fireEvent, waitFor, prettyDOM } from '@testing-library/dom'
+import { getByText, fireEvent, waitFor } from '@testing-library/dom'
 
 import keselect from '../keselect'
 
 describe('Keselect', () => {
   describe('Non Ajax', () => {
-    const initDOM = () => {
+    const initDOM = (options = {}) => {
       const $container = document.createElement('div')
 
       $container.innerHTML = `
@@ -22,7 +22,7 @@ describe('Keselect', () => {
 
       const $select = $container.querySelector('select')
 
-      return keselect($select)
+      return keselect($select, options)
     }
 
     it('should open the dropdown and select an option', () => {
@@ -124,6 +124,19 @@ describe('Keselect', () => {
       fireEvent.click(document)
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
+    })
+
+    it('should not open the dropdown because was disabled', () => {
+      const $select = initDOM({ isDisabled: true })
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect($selected).toHaveClass('keselect__selected--placeholder')
     })
   })
 

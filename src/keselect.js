@@ -175,6 +175,13 @@ const getDropdownPosition = ($container) => {
  * @return {HTMLDivElement} Element that wraps raw select element.
  */
 const keselect = ($origin, options = {}) => {
+  const defaultOptions = {
+    isDisabled: false,
+    isAjaxUsed: false,
+    onSearch: () => {},
+    ...options
+  }
+
   const isValidElement = $origin instanceof HTMLElement
 
   if (!isValidElement) {
@@ -182,7 +189,7 @@ const keselect = ($origin, options = {}) => {
     return null
   }
 
-  const { isAjaxUsed, onSearch } = options
+  const { isDisabled, isAjaxUsed, onSearch } = defaultOptions
   const $rawOptions = Object.values($origin.options)
 
   // Get options data from inside original select element
@@ -250,8 +257,15 @@ const keselect = ($origin, options = {}) => {
     createOptionElements(items, $origin)
   }
 
+  if (isDisabled) {
+    $selected.classList.add('keselect__selected--placeholder')
+    $origin.disabled = true
+  }
+
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
+    if (isDisabled) return
+
     const isDropdownOpen = $dropdown.classList.contains('keselect__dropdown--show')
 
     openDropdown($dropdown, !isDropdownOpen)
