@@ -138,6 +138,20 @@ describe('Keselect', () => {
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
       expect($selected).toHaveClass('keselect__selected--placeholder')
     })
+
+    it('should call callback when dropdown open', () => {
+      const onDropdownOpen = jest.fn()
+      const $select = initDOM({ onDropdownOpen })
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+      expect(onDropdownOpen).toBeCalled()
+    })
   })
 
   describe('Ajax', () => {

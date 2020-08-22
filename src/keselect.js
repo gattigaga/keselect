@@ -179,6 +179,7 @@ const keselect = ($origin, options = {}) => {
     isDisabled: false,
     isAjaxUsed: false,
     onSearch: () => {},
+    onDropdownOpen: () => {},
     ...options
   }
 
@@ -189,7 +190,7 @@ const keselect = ($origin, options = {}) => {
     return null
   }
 
-  const { isDisabled, isAjaxUsed, onSearch } = defaultOptions
+  const { isDisabled, isAjaxUsed, onSearch, onDropdownOpen } = defaultOptions
   const $rawOptions = Object.values($origin.options)
 
   // Get options data from inside original select element
@@ -276,6 +277,7 @@ const keselect = ($origin, options = {}) => {
       showMessage($messageWrapper, !items.length)
       removeOptionElements($optionWrapper)
       createOptionElements(items, $origin)
+      onDropdownOpen()
     }
   })
 
