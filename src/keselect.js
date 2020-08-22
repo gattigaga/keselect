@@ -167,6 +167,13 @@ const getDropdownPosition = ($container) => {
   return position
 }
 
+/**
+ * The main function used to turn raw select into keselect.
+ *
+ * @param {HTMLSelectElement} $origin Raw select element.
+ * @param {Object} [$options={}] Keselect's configuration.
+ * @return {HTMLDivElement} Element that wraps raw select element.
+ */
 const keselect = ($origin, options = {}) => {
   const isValidElement = $origin instanceof HTMLElement
 
