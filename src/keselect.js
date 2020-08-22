@@ -122,6 +122,12 @@ const removeOptionElements = ($optionWrapper) => {
     .forEach($option => $option.remove())
 }
 
+/**
+ * Get position where dropdown should be open.
+ *
+ * @param {HTMLDivElement} $container Element that wraps raw select element.
+ * @return {string} Dropdown position.
+ */
 const getDropdownPosition = ($container) => {
   const viewportHeight = window.innerHeight
   const containerOffset = $container.offsetTop + $container.offsetHeight
