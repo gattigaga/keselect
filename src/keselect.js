@@ -180,6 +180,7 @@ const keselect = ($origin, options = {}) => {
     isAjaxUsed: false,
     onSearch: () => {},
     onDropdownOpen: () => {},
+    onDropdownClose: () => {},
     ...options
   }
 
@@ -190,7 +191,7 @@ const keselect = ($origin, options = {}) => {
     return null
   }
 
-  const { isDisabled, isAjaxUsed, onSearch, onDropdownOpen } = defaultOptions
+  const { isDisabled, isAjaxUsed, onSearch, onDropdownOpen, onDropdownClose } = defaultOptions
   const $rawOptions = Object.values($origin.options)
 
   // Get options data from inside original select element
@@ -271,7 +272,9 @@ const keselect = ($origin, options = {}) => {
 
     openDropdown($dropdown, !isDropdownOpen)
 
-    if (!isDropdownOpen) {
+    if (isDropdownOpen) {
+      onDropdownClose()
+    } else {
       $search.value = ''
 
       showMessage($messageWrapper, !items.length)
@@ -333,6 +336,7 @@ const keselect = ($origin, options = {}) => {
 
     if (isEscPressed) {
       openDropdown($dropdown, false)
+      onDropdownClose()
     }
   })
 
@@ -342,6 +346,7 @@ const keselect = ($origin, options = {}) => {
 
     if (isClickOutside) {
       openDropdown($dropdown, false)
+      onDropdownClose()
     }
   })
 

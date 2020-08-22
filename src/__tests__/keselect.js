@@ -94,7 +94,7 @@ describe('Keselect', () => {
       expect($message).toHaveTextContent('No data available')
     })
 
-    it('should open the dropdown and close by pressing esc key', () => {
+    it('should close the dropdown by pressing esc key', () => {
       const $select = initDOM()
       const $selected = $select.querySelector('.keselect__selected')
       const $dropdown = $select.querySelector('.keselect__dropdown')
@@ -110,7 +110,23 @@ describe('Keselect', () => {
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
     })
 
-    it('should open the dropdown and close by clicking outside', () => {
+    it('should close the dropdown by clicking main selected', () => {
+      const $select = initDOM()
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      fireEvent.click($selected)
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+    })
+
+    it('should close the dropdown by clicking outside', () => {
       const $select = initDOM()
       const $selected = $select.querySelector('.keselect__selected')
       const $dropdown = $select.querySelector('.keselect__dropdown')
@@ -151,6 +167,60 @@ describe('Keselect', () => {
 
       expect($dropdown).toHaveClass('keselect__dropdown--show')
       expect(onDropdownOpen).toBeCalled()
+    })
+
+    it('should call callback when dropdown closed by pressing esc key', () => {
+      const onDropdownClose = jest.fn()
+      const $select = initDOM({ onDropdownClose })
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      fireEvent.keyUp(document, { keyCode: 27 })
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(onDropdownClose).toBeCalled()
+    })
+
+    it('should call callback when dropdown closed by clicking main selected', () => {
+      const onDropdownClose = jest.fn()
+      const $select = initDOM({ onDropdownClose })
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      fireEvent.click($selected)
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(onDropdownClose).toBeCalled()
+    })
+
+    it('should call callback when dropdown closed by clicking outside', () => {
+      const onDropdownClose = jest.fn()
+      const $select = initDOM({ onDropdownClose })
+      const $selected = $select.querySelector('.keselect__selected')
+      const $dropdown = $select.querySelector('.keselect__dropdown')
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      fireEvent.click(document)
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(onDropdownClose).toBeCalled()
     })
   })
 
