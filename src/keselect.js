@@ -116,6 +116,12 @@ const createToggleMessageText = ($messageWrapper) => (isShow) => {
   }
 }
 
+/**
+ * Remove all keselect's option elements.
+ *
+ * @param {HTMLDivElement} $optionWrapper Element that wraps keselect's option elements.
+ * @return {undefined}
+ */
 const removeOptionElements = ($optionWrapper) => {
   $optionWrapper
     .querySelectorAll('.keselect__option')
