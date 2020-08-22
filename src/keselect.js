@@ -32,6 +32,17 @@ const createBaseElements = ($origin) => {
   $container.prepend($origin)
 }
 
+/**
+ * Create keselect's option elements.
+ *
+ * @param {Object[]} items Items that would be used to create keselect's option elements.
+ * @param {number} items[].index Index of the option.
+ * @param {string} items[].label Label of the option.
+ * @param {string} items[].value Value of the option.
+ * @param {HTMLSelectElement} $origin Raw select element.
+ * @param {boolean} [isAjaxUsed=false] Are you want to use Ajax to get the options ?
+ * @return {undefined}
+ */
 const createOptionElements = (items, $origin, isAjaxUsed = false) => {
   const $container = $origin.parentElement
   const $selected = $container.querySelector('.keselect__selected')
