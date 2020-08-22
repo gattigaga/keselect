@@ -106,7 +106,14 @@ const createToggleDropdown = ($dropdown) => (isOpen) => {
   }
 }
 
-const createToggleMessageText = ($messageWrapper) => (isShow) => {
+/**
+ * Toggle show/hide message inside dropdown.
+ *
+ * @param {HTMLDivElement} $messageWrapper Element that wraps element that contains message.
+ * @param {boolean} [isShow=true] Are you want to show the message or not ?
+ * @return {undefined}
+ */
+const showMessage = ($messageWrapper, isShow = true) => {
   if (isShow) {
     $messageWrapper.classList.remove('keselect__message-wrapper--hide')
     $messageWrapper.classList.add('keselect__message-wrapper--show')
@@ -220,7 +227,6 @@ const keselect = ($origin, options = {}) => {
   }
 
   const openDropdown = createToggleDropdown($dropdown)
-  const showMessageText = createToggleMessageText($messageWrapper)
 
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
@@ -231,7 +237,7 @@ const keselect = ($origin, options = {}) => {
     if (!isDropdownOpen) {
       $search.value = ''
 
-      showMessageText(!items.length)
+      showMessage($messageWrapper, !items.length)
       removeOptionElements($optionWrapper)
       createOptionElements(items, $origin)
     }
@@ -250,7 +256,7 @@ const keselect = ($origin, options = {}) => {
       if (keyword.length >= 1) {
         $message.textContent = 'Searching...'
 
-        showMessageText(true)
+        showMessage($messageWrapper)
         removeOptionElements($optionWrapper)
 
         const fetchItems = () => {
@@ -259,7 +265,7 @@ const keselect = ($origin, options = {}) => {
 
             removeOptionElements($optionWrapper)
             createOptionElements(newItems, $origin, isAjaxUsed)
-            showMessageText(!newItems.length)
+            showMessage($messageWrapper, !newItems.length)
           })
         }
 
@@ -268,7 +274,7 @@ const keselect = ($origin, options = {}) => {
         $message.textContent = 'Enter a keyword to find options'
 
         removeOptionElements($optionWrapper)
-        showMessageText(true)
+        showMessage($messageWrapper)
       }
     } else {
       const newItems = items.filter(item => {
@@ -279,7 +285,7 @@ const keselect = ($origin, options = {}) => {
 
       removeOptionElements($optionWrapper)
       createOptionElements(newItems, $origin)
-      showMessageText(!newItems.length)
+      showMessage($messageWrapper, !newItems.length)
     }
   })
 
