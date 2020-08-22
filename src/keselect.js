@@ -10,7 +10,7 @@ import { debounce } from 'debounce'
 const createBaseElements = ($origin) => {
   const $container = document.createElement('div')
 
-  $container.classList.add('keselect')
+  $container.classList.add('keselect__container')
 
   $container.innerHTML = `
     <div class="keselect__selected-wrapper">

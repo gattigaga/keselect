@@ -1,4 +1,4 @@
 import keselect from './keselect'
-import './keselect.css'
+import './keselect.scss'
 
 export default keselect
