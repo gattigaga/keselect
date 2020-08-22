@@ -58,7 +58,6 @@ const createOptionElements = (items, $origin, isAjaxUsed = false) => {
   `
 
   const $options = $optionWrapper.querySelectorAll('.keselect__option')
-  const openDropdown = createToggleDropdown($dropdown)
 
   // Assign event listener to all option elements
   $options.forEach(($option) => {
@@ -91,12 +90,19 @@ const createOptionElements = (items, $origin, isAjaxUsed = false) => {
         $origin.selectedIndex = index
       }
 
-      openDropdown(false)
+      openDropdown($dropdown, false)
     })
   })
 }
 
-const createToggleDropdown = ($dropdown) => (isOpen) => {
+/**
+ * Toggle open/close dropdown.
+ *
+ * @param {HTMLDivElement} $dropdown Element that act as dropdown.
+ * @param {boolean} [isOpen=true] Are you want to open the dropdown or not ?
+ * @return {undefined}
+ */
+const openDropdown = ($dropdown, isOpen = true) => {
   if (isOpen) {
     $dropdown.classList.remove('keselect__dropdown--hide')
     $dropdown.classList.add('keselect__dropdown--show')
@@ -226,13 +232,11 @@ const keselect = ($origin, options = {}) => {
     createOptionElements(items, $origin)
   }
 
-  const openDropdown = createToggleDropdown($dropdown)
-
   // Make container able to toggle open/close when clicked
   $container.addEventListener('click', () => {
     const isDropdownOpen = $dropdown.classList.contains('keselect__dropdown--show')
 
-    openDropdown(!isDropdownOpen)
+    openDropdown($dropdown, !isDropdownOpen)
 
     if (!isDropdownOpen) {
       $search.value = ''
@@ -294,7 +298,7 @@ const keselect = ($origin, options = {}) => {
     const isEscPressed = event.keyCode === 27
 
     if (isEscPressed) {
-      openDropdown(false)
+      openDropdown($dropdown, false)
     }
   })
 
@@ -303,7 +307,7 @@ const keselect = ($origin, options = {}) => {
     const isClickOutside = !$container.contains(event.target)
 
     if (isClickOutside) {
-      openDropdown(false)
+      openDropdown($dropdown, false)
     }
   })
 
