@@ -1,15 +1,15 @@
 
-import { getByText, fireEvent, waitFor } from '@testing-library/dom'
+import { getByText, fireEvent, waitFor, getByTestId } from '@testing-library/dom'
 
-import keselect from '../keselect'
+import Keselect from '../keselect'
 
 describe('Keselect', () => {
   describe('Non Ajax', () => {
-    const initDOM = (options = {}) => {
+    const initDOM = () => {
       const $container = document.createElement('div')
 
       $container.innerHTML = `
-        <select name="language_id" id="languages">
+        <select name="language_id" id="languages" data-testid="keselect">
           <option value="">Select Language</option>
           <option value="1">Bahasa Indonesia</option>
           <option value="2">Arabic</option>
@@ -20,16 +20,14 @@ describe('Keselect', () => {
         </select>
       `
 
-      const $select = $container.querySelector('select')
-
-      return keselect($select, options)
+      return $container
     }
 
     it('should open the dropdown and select an option', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $messageWrapper, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -45,11 +43,10 @@ describe('Keselect', () => {
     })
 
     it('should filter the option list and select an option that found', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $search = $select.querySelector('.keselect__search')
-      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $search, $messageWrapper, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -71,12 +68,10 @@ describe('Keselect', () => {
     })
 
     it('should filter the option list and not found an option', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $search = $select.querySelector('.keselect__search')
-      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
-      const $message = $select.querySelector('.keselect__message')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -95,9 +90,10 @@ describe('Keselect', () => {
     })
 
     it('should close the dropdown by pressing esc key', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -111,9 +107,10 @@ describe('Keselect', () => {
     })
 
     it('should close the dropdown by clicking main selected', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -127,9 +124,10 @@ describe('Keselect', () => {
     })
 
     it('should close the dropdown by clicking outside', () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -143,9 +141,10 @@ describe('Keselect', () => {
     })
 
     it('should not open the dropdown because was disabled', () => {
-      const $select = initDOM({ isDisabled: true })
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { isDisabled: true })
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -157,9 +156,10 @@ describe('Keselect', () => {
 
     it('should call callback when dropdown open', () => {
       const onDropdownOpen = jest.fn()
-      const $select = initDOM({ onDropdownOpen })
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { onDropdownOpen })
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -171,9 +171,10 @@ describe('Keselect', () => {
 
     it('should call callback when dropdown closed by pressing esc key', () => {
       const onDropdownClose = jest.fn()
-      const $select = initDOM({ onDropdownClose })
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { onDropdownClose })
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -189,9 +190,10 @@ describe('Keselect', () => {
 
     it('should call callback when dropdown closed by clicking main selected', () => {
       const onDropdownClose = jest.fn()
-      const $select = initDOM({ onDropdownClose })
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { onDropdownClose })
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -207,9 +209,10 @@ describe('Keselect', () => {
 
     it('should call callback when dropdown closed by clicking outside', () => {
       const onDropdownClose = jest.fn()
-      const $select = initDOM({ onDropdownClose })
-      const $selected = $select.querySelector('.keselect__selected')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { onDropdownClose })
+      const { $selected, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -225,52 +228,59 @@ describe('Keselect', () => {
   })
 
   describe('Ajax', () => {
+    const items = [
+      {
+        index: 1,
+        label: 'Bahasa Indonesia',
+        value: 1
+      },
+      {
+        index: 2,
+        label: 'Arabic',
+        value: 2
+      },
+      {
+        index: 3,
+        label: 'English',
+        value: 3
+      },
+      {
+        index: 4,
+        label: 'Japanese',
+        value: 4
+      },
+      {
+        index: 5,
+        label: 'Chinese',
+        value: 5
+      },
+      {
+        index: 6,
+        label: 'Russian',
+        value: 6
+      }
+    ]
+
     const initDOM = () => {
       const $container = document.createElement('div')
 
       $container.innerHTML = `
-        <select name="language_id" id="languages">
+        <select name="language_id" id="languages" data-testid="keselect">
           <option value="">Select Language</option>
         </select>
       `
 
-      const $select = $container.querySelector('select')
+      return $container
+    }
 
-      return keselect($select, {
+    it('should open the dropdown, filter and select an option', async () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+
+      const keselect = new Keselect($select, {
         isAjaxUsed: true,
         onSearch: (keyword, setItems) => {
-          const items = [
-            {
-              index: 1,
-              label: 'Bahasa Indonesia',
-              value: 1
-            },
-            {
-              index: 2,
-              label: 'Arabic',
-              value: 2
-            },
-            {
-              index: 3,
-              label: 'English',
-              value: 3
-            },
-            {
-              index: 4,
-              label: 'Japanese',
-              value: 4
-            },
-            {
-              index: 5,
-              label: 'Chinese',
-              value: 5
-            },
-            {
-              index: 6,
-              label: 'Russian',
-              value: 6
-            }
-          ].filter(item => {
+          const filteredItems = items.filter(item => {
             const pattern = new RegExp(keyword, 'ig')
             const isMatch = pattern.test(item.label)
 
@@ -278,19 +288,12 @@ describe('Keselect', () => {
           })
 
           setTimeout(() => {
-            setItems(items)
+            setItems(filteredItems)
           }, 1000)
         }
       })
-    }
 
-    it('should open the dropdown, filter and select an option', async () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $search = $select.querySelector('.keselect__search')
-      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
-      const $message = $select.querySelector('.keselect__message')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -322,12 +325,26 @@ describe('Keselect', () => {
     })
 
     it('should filter and not found an option', async () => {
-      const $select = initDOM()
-      const $selected = $select.querySelector('.keselect__selected')
-      const $search = $select.querySelector('.keselect__search')
-      const $messageWrapper = $select.querySelector('.keselect__message-wrapper')
-      const $message = $select.querySelector('.keselect__message')
-      const $dropdown = $select.querySelector('.keselect__dropdown')
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+
+      const keselect = new Keselect($select, {
+        isAjaxUsed: true,
+        onSearch: (keyword, setItems) => {
+          const filteredItems = items.filter(item => {
+            const pattern = new RegExp(keyword, 'ig')
+            const isMatch = pattern.test(item.label)
+
+            return isMatch
+          })
+
+          setTimeout(() => {
+            setItems(filteredItems)
+          }, 1000)
+        }
+      })
+
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
