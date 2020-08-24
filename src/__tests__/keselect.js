@@ -225,6 +225,25 @@ describe('Keselect', () => {
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
       expect(onDropdownClose).toBeCalled()
     })
+
+    it('should call callback when dropdown closed by selecting option', () => {
+      const onDropdownClose = jest.fn()
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { onDropdownClose })
+      const { $selected, $dropdown } = keselect.elements
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      getByText($dropdown, 'Japanese').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(onDropdownClose).toBeCalled()
+    })
   })
 
   describe('Ajax', () => {

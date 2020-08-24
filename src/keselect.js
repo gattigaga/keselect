@@ -239,7 +239,7 @@ class Keselect {
 
   createItems () {
     const { $origin, $selected, $optionWrapper } = this.elements
-    const { isAjaxUsed } = this.options
+    const { isAjaxUsed, onDropdownClose } = this.options
 
     $optionWrapper.innerHTML = `
       ${this.items.map(item => {
@@ -294,6 +294,7 @@ class Keselect {
         }
 
         this.openDropdown(false)
+        onDropdownClose()
       })
     })
   }
