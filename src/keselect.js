@@ -330,6 +330,10 @@ class Keselect {
       $messageWrapper.classList.add('keselect__message-wrapper--hide')
     }
   }
+
+  getValue () {
+    return this.elements.$origin.value
+  }
 }
 
 export default Keselect

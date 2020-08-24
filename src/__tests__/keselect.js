@@ -244,6 +244,24 @@ describe('Keselect', () => {
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
       expect(onDropdownClose).toBeCalled()
     })
+
+    it('should returns the value', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect.elements
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      getByText($dropdown, 'Japanese').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(keselect.getValue()).toBe('4')
+    })
   })
 
   describe('Ajax', () => {
