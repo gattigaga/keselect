@@ -65,7 +65,7 @@ class Keselect {
       $selected.textContent = selectedLabel
       $message.textContent = 'No data available'
 
-      this.createItems()
+      this.createItemElements(this.items)
     }
 
     if (isDisabled) {
@@ -87,8 +87,8 @@ class Keselect {
         $search.value = ''
 
         this.showMessage(!this.items.length)
-        this.removeItems()
-        this.createItems()
+        this.removeItemElements()
+        this.createItemElements(this.items)
         onDropdownOpen()
       }
     })
@@ -107,16 +107,15 @@ class Keselect {
           $message.textContent = 'Searching...'
 
           this.showMessage()
-          this.removeItems()
+          this.removeItemElements()
 
           const fetchItems = () => {
-            onSearch(keyword, (newItems) => {
-              this.items = newItems
+            onSearch(keyword, (items) => {
               $message.textContent = 'No data available'
 
-              this.removeItems()
-              this.createItems()
-              this.showMessage(!this.items.length)
+              this.removeItemElements()
+              this.createItemElements(items)
+              this.showMessage(!items.length)
             })
           }
 
@@ -124,19 +123,19 @@ class Keselect {
         } else {
           $message.textContent = 'Enter a keyword to find options'
 
-          this.removeItems()
+          this.removeItemElements()
           this.showMessage()
         }
       } else {
-        this.items = this.items.filter(item => {
+        const items = this.items.filter(item => {
           const pattern = new RegExp(keyword, 'ig')
 
           return pattern.test(item.label)
         })
 
-        this.removeItems()
-        this.createItems()
-        this.showMessage(!this.items.length)
+        this.removeItemElements()
+        this.createItemElements(items)
+        this.showMessage(!items.length)
       }
     })
 
@@ -236,12 +235,12 @@ class Keselect {
     }
   }
 
-  createItems () {
+  createItemElements (items) {
     const { $origin, $selected, $optionWrapper } = this.elements
     const { isAjaxUsed, onDropdownClose } = this.options
 
     $optionWrapper.innerHTML = `
-      ${this.items.map(item => {
+      ${items.map(item => {
         const { index, label, value } = item
         const isSelected = isAjaxUsed ? false : item.index === $origin.selectedIndex
         const selectedClass = isSelected ? 'keselect__option--selected' : ''
@@ -298,7 +297,7 @@ class Keselect {
     })
   }
 
-  removeItems () {
+  removeItemElements () {
     const { $optionWrapper } = this.elements
 
     $optionWrapper
@@ -328,6 +327,46 @@ class Keselect {
       $messageWrapper.classList.remove('keselect__message-wrapper--show')
       $messageWrapper.classList.add('keselect__message-wrapper--hide')
     }
+  }
+
+  setValue (value) {
+    const { $selected, $optionWrapper } = this.elements
+    const { isAjaxUsed } = this.options
+    const isValueInvalid = typeof value !== 'string'
+
+    if (isValueInvalid) {
+      throw new Error('Value should use "string" as data type.')
+    }
+
+    if (isAjaxUsed) {
+      throw new Error('Method "setValue" cannot be used when "isAjaxUsed" active.')
+    }
+
+    const item = this.items.find(item => {
+      return item.value === value
+    })
+
+    if (!item) {
+      throw new Error('Options was not found.')
+    }
+
+    const $option = $optionWrapper.querySelectorAll('.keselect__option')[item.index]
+    const $prevOption = $optionWrapper.querySelector('.keselect__option--selected')
+
+    if ($prevOption) {
+      $prevOption.classList.remove('keselect__option--selected')
+    }
+
+    $option.classList.add('keselect__option--selected')
+
+    if (value) {
+      $selected.classList.remove('keselect__selected--placeholder')
+    } else {
+      $selected.classList.add('keselect__selected--placeholder')
+    }
+
+    $selected.textContent = item.label
+    this.elements.$origin.selectedIndex = item.index
   }
 
   getValue () {

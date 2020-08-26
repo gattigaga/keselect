@@ -252,6 +252,61 @@ describe('Keselect', () => {
       expect(onDropdownClose).toBeCalled()
     })
 
+    it('should set new value', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect.elements
+
+      expect(keselect.getValue()).toBe('')
+
+      keselect.setValue('4')
+
+      const $option = getByText($dropdown, 'Japanese').closest('.keselect__option')
+
+      expect(keselect.getValue()).toBe('4')
+      expect($option).toHaveClass('keselect__option--selected')
+      expect($selected).toHaveTextContent('Japanese')
+      expect($selected).not.toHaveClass('keselect__selected--placeholder')
+
+      keselect.setValue('')
+
+      expect($selected).toHaveClass('keselect__selected--placeholder')
+    })
+
+    it('should not set new value because value is not string', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const message = 'Value should use "string" as data type.'
+
+      const setValue = () => keselect.setValue(4)
+
+      expect(setValue).toThrowError(message)
+    })
+
+    it('should not set new value because ajax is used', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select, { isAjaxUsed: true })
+      const message = 'Method "setValue" cannot be used when "isAjaxUsed" active.'
+
+      const setValue = () => keselect.setValue('4')
+
+      expect(setValue).toThrowError(message)
+    })
+
+    it('should not set new value because options was not found', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const message = 'Options was not found.'
+
+      const setValue = () => keselect.setValue('99')
+
+      expect(setValue).toThrowError(message)
+    })
+
     it('should returns the value', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
