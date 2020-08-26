@@ -23,6 +23,13 @@ describe('Keselect', () => {
       return $container
     }
 
+    it('should failed to create keselect instance because element passed was invalid', () => {
+      const message = 'Passed element is not a valid HTML element.'
+      const keselect = () => new Keselect({})
+
+      expect(keselect).toThrowError(message)
+    })
+
     it('should open the dropdown and select an option', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')

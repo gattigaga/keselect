@@ -5,8 +5,7 @@ class Keselect {
     const isValidElement = $origin instanceof HTMLElement
 
     if (!isValidElement) {
-      console.error('Passed element is not a valid HTML element.')
-      return null
+      throw new Error('Passed element is not a valid HTML element.')
     }
 
     this.options = {
