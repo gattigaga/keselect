@@ -38,10 +38,9 @@ class Keselect {
     if (isAjaxUsed) {
       const $defaultItem = $rawOptions.find(($option, index) => !index)
       const selectedLabel = $defaultItem ? $defaultItem.label : ''
+      const isPlaceholder = $defaultItem && !$defaultItem.value
 
-      if ($defaultItem && !$defaultItem.value) {
-        $selected.classList.add('keselect__selected--placeholder')
-      }
+      this.showPlaceholder(isPlaceholder)
 
       $selected.textContent = selectedLabel
       $message.textContent = 'Enter a keyword to find options'
@@ -58,9 +57,7 @@ class Keselect {
       const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
       const selectedLabel = defaultItem ? defaultItem.label : ''
 
-      if (isPlaceholderSelected) {
-        $selected.classList.add('keselect__selected--placeholder')
-      }
+      this.showPlaceholder(isPlaceholderSelected)
 
       $selected.textContent = selectedLabel
       $message.textContent = 'No data available'
@@ -69,7 +66,8 @@ class Keselect {
     }
 
     if (isDisabled) {
-      $selected.classList.add('keselect__selected--placeholder')
+      this.showPlaceholder()
+
       $origin.disabled = true
     }
 
@@ -268,11 +266,7 @@ class Keselect {
 
         $option.classList.add('keselect__option--selected')
 
-        if (isPlaceholderSelected) {
-          $selected.classList.add('keselect__selected--placeholder')
-        } else {
-          $selected.classList.remove('keselect__selected--placeholder')
-        }
+        this.showPlaceholder(isPlaceholderSelected)
 
         $selected.textContent = label
 
@@ -328,6 +322,16 @@ class Keselect {
     }
   }
 
+  showPlaceholder (isShow = true) {
+    const { $selected } = this.elements
+
+    if (isShow) {
+      $selected.classList.add('keselect__selected--placeholder')
+    } else {
+      $selected.classList.remove('keselect__selected--placeholder')
+    }
+  }
+
   setValue (value) {
     const { $selected, $optionWrapper } = this.elements
     const { isAjaxUsed } = this.options
@@ -358,11 +362,7 @@ class Keselect {
 
     $option.classList.add('keselect__option--selected')
 
-    if (value) {
-      $selected.classList.remove('keselect__selected--placeholder')
-    } else {
-      $selected.classList.add('keselect__selected--placeholder')
-    }
+    this.showPlaceholder(!value)
 
     $selected.textContent = item.label
     this.elements.$origin.selectedIndex = item.index
