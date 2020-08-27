@@ -1,6 +1,17 @@
 import { debounce } from 'debounce'
 
 class Keselect {
+  /**
+   * Create keselect instance.
+   *
+   * @param {HTMLSelectElement} $origin Raw select element.
+   * @param {Object} options Used as configuration.
+   * @param {boolean} options.isDisabled Toggle enable/disable select functionality.
+   * @param {boolean} options.isAjaxUsed Toggle if AJAX has been used or not.
+   * @param {function} options.onSearch Callback that called everytime when user typed on the search box, to use it, "isAjaxUsed" should be "true".
+   * @param {function} options.onDropdownOpen Callback that called after drodown has been opened.
+   * @param {function} options.onDropdownClose Callback that called after dropdown has been closed.
+   */
   constructor ($origin, options = {}) {
     const isValidElement = $origin instanceof HTMLElement
 
@@ -23,6 +34,9 @@ class Keselect {
     this.initialize()
   }
 
+  /**
+   * Initialize keselect.
+   */
   initialize () {
     this.elements = {
       ...this.elements,
@@ -153,6 +167,11 @@ class Keselect {
     })
   }
 
+  /**
+   * Get items from raw select's options.
+   *
+   * @returns {Object[]} Items that would be used as keselect's option elements.
+   */
   getItemsFromOrigin () {
     const { $origin } = this.elements
     const { isAjaxUsed } = this.options
@@ -169,6 +188,12 @@ class Keselect {
     return items
   }
 
+  /**
+   * Create base elements that wraps the raw select element.
+   * After this function called, you can access the elements from the DOM.
+   *
+   * @returns {Object} Elements that has been created.
+   */
   createBaseElements () {
     const { $origin } = this.elements
     const $container = document.createElement('div')
@@ -228,6 +253,14 @@ class Keselect {
     }
   }
 
+  /**
+   * Create keselect's option elements.
+   *
+   * @param {Object[]} items Items that would be used as keselect's option elements.
+   * @param {number} items[].index Index of the option (starts from 0).
+   * @param {string} items[].label Label of the option.
+   * @param {string} items[].value Value of the option.
+   */
   createItemElements (items) {
     const { $origin, $selected, $optionWrapper } = this.elements
     const { isAjaxUsed } = this.options
@@ -285,6 +318,9 @@ class Keselect {
     })
   }
 
+  /**
+   * Remove all keselect's option elements.
+   */
   removeItemElements () {
     const { $optionWrapper } = this.elements
 
@@ -293,6 +329,11 @@ class Keselect {
       .forEach($option => $option.remove())
   }
 
+  /**
+   * Toggle open/close dropdown.
+   *
+   * @param {boolean} [isOpen=true] Are you want to open the dropdown or not ?
+   */
   openDropdown (isOpen = true) {
     const { $dropdown } = this.elements
     const { onDropdownOpen, onDropdownClose } = this.options
@@ -310,6 +351,11 @@ class Keselect {
     }
   }
 
+  /**
+   * Toggle show/hide message inside dropdown.
+   *
+   * @param {boolean} [isShow=true] Are you want to show the message or not ?
+   */
   showMessage (isShow = true) {
     const { $messageWrapper } = this.elements
 
@@ -322,6 +368,11 @@ class Keselect {
     }
   }
 
+  /**
+   * Toggle set selected option in select box as placeholder or regular selected.
+   *
+   * @param {boolean} [isShow=true] Are you want to show selected as placeholder ?
+   */
   showPlaceholder (isShow = true) {
     const { $selected } = this.elements
 
@@ -332,6 +383,11 @@ class Keselect {
     }
   }
 
+  /**
+   * Set new value but can be used only if "isAjaxUsed" is "false".
+   *
+   * @param {string} value New value
+   */
   setValue (value) {
     const { $selected, $optionWrapper } = this.elements
     const { isAjaxUsed } = this.options
@@ -368,6 +424,11 @@ class Keselect {
     this.elements.$origin.selectedIndex = item.index
   }
 
+  /**
+   * Get keselect's value.
+   *
+   * @returns {string} Keselect value
+   */
   getValue () {
     return this.elements.$origin.value
   }
