@@ -31,7 +31,7 @@ class Keselect {
 
     this.items = this.getItemsFromOrigin()
 
-    const { isAjaxUsed, isDisabled, onSearch, onDropdownClose, onDropdownOpen } = this.options
+    const { isAjaxUsed, isDisabled, onSearch } = this.options
     const { $container, $search, $dropdown, $selected, $message, $origin } = this.elements
     const $rawOptions = Object.values($origin.options)
 
@@ -79,18 +79,15 @@ class Keselect {
 
       const isDropdownOpen = $dropdown.classList.contains('keselect__dropdown--show')
 
-      this.openDropdown(!isDropdownOpen)
-
-      if (isDropdownOpen) {
-        onDropdownClose()
-      } else {
+      if (!isDropdownOpen) {
         $search.value = ''
 
         this.showMessage(!this.items.length)
         this.removeItemElements()
         this.createItemElements(this.items)
-        onDropdownOpen()
       }
+
+      this.openDropdown(!isDropdownOpen)
     })
 
     // Prevent event bubbling when dropdown clicked
@@ -145,7 +142,6 @@ class Keselect {
 
       if (isEscPressed) {
         this.openDropdown(false)
-        onDropdownClose()
       }
     })
 
@@ -155,7 +151,6 @@ class Keselect {
 
       if (isClickOutside) {
         this.openDropdown(false)
-        onDropdownClose()
       }
     })
   }
@@ -237,7 +232,7 @@ class Keselect {
 
   createItemElements (items) {
     const { $origin, $selected, $optionWrapper } = this.elements
-    const { isAjaxUsed, onDropdownClose } = this.options
+    const { isAjaxUsed } = this.options
 
     $optionWrapper.innerHTML = `
       ${items.map(item => {
@@ -292,7 +287,6 @@ class Keselect {
         }
 
         this.openDropdown(false)
-        onDropdownClose()
       })
     })
   }
@@ -307,13 +301,18 @@ class Keselect {
 
   openDropdown (isOpen = true) {
     const { $dropdown } = this.elements
+    const { onDropdownOpen, onDropdownClose } = this.options
 
     if (isOpen) {
       $dropdown.classList.remove('keselect__dropdown--hide')
       $dropdown.classList.add('keselect__dropdown--show')
+
+      onDropdownOpen()
     } else {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
+
+      onDropdownClose()
     }
   }
 
