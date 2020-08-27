@@ -29,7 +29,7 @@ class Keselect {
       ...this.createBaseElements()
     }
 
-    this.items = this.getOptionsFromOrigin()
+    this.items = this.getItemsFromOrigin()
 
     const { isAjaxUsed, isDisabled, onSearch, onDropdownClose, onDropdownOpen } = this.options
     const { $container, $search, $dropdown, $selected, $message, $origin } = this.elements
@@ -160,7 +160,7 @@ class Keselect {
     })
   }
 
-  getOptionsFromOrigin () {
+  getItemsFromOrigin () {
     const { $origin } = this.elements
     const { isAjaxUsed } = this.options
     const $rawOptions = Object.values($origin.options)
