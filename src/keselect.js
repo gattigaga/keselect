@@ -18,7 +18,7 @@ class Keselect {
       throw new Error('Passed element is not a valid HTML element.')
     }
 
-    this.options = {
+    this._options = {
       isDisabled: false,
       onSearch: null,
       onDropdownOpen: () => {},
@@ -26,25 +26,25 @@ class Keselect {
       ...options
     }
 
-    this.elements = { $origin }
-    this.items = []
+    this._elements = { $origin }
+    this._items = []
 
-    this.initialize()
+    this._initialize()
   }
 
   /**
    * Initialize keselect.
    */
-  initialize () {
-    this.elements = {
-      ...this.elements,
-      ...this.createBaseElements()
+  _initialize () {
+    this._elements = {
+      ...this._elements,
+      ...this._createBaseElements()
     }
 
-    this.items = this.getItemsFromOrigin()
+    this._items = this._getItemsFromOrigin()
 
-    const { isDisabled, onSearch } = this.options
-    const { $container, $search, $dropdown, $selected, $message, $origin } = this.elements
+    const { isDisabled, onSearch } = this._options
+    const { $container, $search, $dropdown, $selected, $message, $origin } = this._elements
     const $rawOptions = Object.values($origin.options)
     const isAjaxUsed = !!onSearch
 
@@ -53,7 +53,7 @@ class Keselect {
       const selectedLabel = $defaultItem ? $defaultItem.label : ''
       const isPlaceholder = $defaultItem && !$defaultItem.value
 
-      this.showPlaceholder(isPlaceholder)
+      this._showPlaceholder(isPlaceholder)
 
       $selected.textContent = selectedLabel
       $message.textContent = 'Enter a keyword to find options'
@@ -66,20 +66,20 @@ class Keselect {
           $option.remove()
         })
     } else {
-      const defaultItem = this.items[$origin.selectedIndex]
+      const defaultItem = this._items[$origin.selectedIndex]
       const isPlaceholderSelected = defaultItem ? defaultItem.value === '' : false
       const selectedLabel = defaultItem ? defaultItem.label : ''
 
-      this.showPlaceholder(isPlaceholderSelected)
+      this._showPlaceholder(isPlaceholderSelected)
 
       $selected.textContent = selectedLabel
       $message.textContent = 'No data available'
 
-      this.createItemElements(this.items)
+      this._createItemElements(this._items)
     }
 
     if (isDisabled) {
-      this.showPlaceholder()
+      this._showPlaceholder()
 
       $origin.disabled = true
     }
@@ -93,12 +93,12 @@ class Keselect {
       if (!isDropdownOpen) {
         $search.value = ''
 
-        this.showMessage(!this.items.length)
-        this.removeItemElements()
-        this.createItemElements(this.items)
+        this._showMessage(!this._items.length)
+        this._removeItemElements()
+        this._createItemElements(this._items)
       }
 
-      this.openDropdown(!isDropdownOpen)
+      this._openDropdown(!isDropdownOpen)
     })
 
     // Prevent event bubbling when dropdown clicked
@@ -114,16 +114,16 @@ class Keselect {
         if (keyword.length >= 1) {
           $message.textContent = 'Searching...'
 
-          this.showMessage()
-          this.removeItemElements()
+          this._showMessage()
+          this._removeItemElements()
 
           const fetchItems = () => {
             onSearch(keyword, (items) => {
               $message.textContent = 'No data available'
 
-              this.removeItemElements()
-              this.createItemElements(items)
-              this.showMessage(!items.length)
+              this._removeItemElements()
+              this._createItemElements(items)
+              this._showMessage(!items.length)
             })
           }
 
@@ -131,19 +131,19 @@ class Keselect {
         } else {
           $message.textContent = 'Enter a keyword to find options'
 
-          this.removeItemElements()
-          this.showMessage()
+          this._removeItemElements()
+          this._showMessage()
         }
       } else {
-        const items = this.items.filter(item => {
+        const items = this._items.filter(item => {
           const pattern = new RegExp(keyword, 'ig')
 
           return pattern.test(item.label)
         })
 
-        this.removeItemElements()
-        this.createItemElements(items)
-        this.showMessage(!items.length)
+        this._removeItemElements()
+        this._createItemElements(items)
+        this._showMessage(!items.length)
       }
     })
 
@@ -152,7 +152,7 @@ class Keselect {
       const isEscPressed = event.keyCode === 27
 
       if (isEscPressed) {
-        this.openDropdown(false)
+        this._openDropdown(false)
       }
     })
 
@@ -161,7 +161,7 @@ class Keselect {
       const isClickOutside = !$container.contains(event.target)
 
       if (isClickOutside) {
-        this.openDropdown(false)
+        this._openDropdown(false)
       }
     })
   }
@@ -171,9 +171,9 @@ class Keselect {
    *
    * @returns {Object[]} Items that would be used as keselect's option elements.
    */
-  getItemsFromOrigin () {
-    const { $origin } = this.elements
-    const { onSearch } = this.options
+  _getItemsFromOrigin () {
+    const { $origin } = this._elements
+    const { onSearch } = this._options
     const isAjaxUsed = !!onSearch
     const $rawOptions = Object.values($origin.options)
 
@@ -194,8 +194,8 @@ class Keselect {
    *
    * @returns {Object} Elements that has been created.
    */
-  createBaseElements () {
-    const { $origin } = this.elements
+  _createBaseElements () {
+    const { $origin } = this._elements
     const $container = document.createElement('div')
 
     $container.classList.add('keselect__container')
@@ -261,9 +261,9 @@ class Keselect {
    * @param {string} items[].label Label of the option.
    * @param {string} items[].value Value of the option.
    */
-  createItemElements (items) {
-    const { $origin, $selected, $optionWrapper } = this.elements
-    const { onSearch } = this.options
+  _createItemElements (items) {
+    const { $origin, $selected, $optionWrapper } = this._elements
+    const { onSearch } = this._options
     const isAjaxUsed = !!onSearch
 
     $optionWrapper.innerHTML = `
@@ -300,7 +300,7 @@ class Keselect {
 
         $option.classList.add('keselect__option--selected')
 
-        this.showPlaceholder(isPlaceholderSelected)
+        this._showPlaceholder(isPlaceholderSelected)
 
         $selected.textContent = label
 
@@ -314,7 +314,7 @@ class Keselect {
           $origin.selectedIndex = index
         }
 
-        this.openDropdown(false)
+        this._openDropdown(false)
       })
     })
   }
@@ -322,8 +322,8 @@ class Keselect {
   /**
    * Remove all keselect's option elements.
    */
-  removeItemElements () {
-    const { $optionWrapper } = this.elements
+  _removeItemElements () {
+    const { $optionWrapper } = this._elements
 
     $optionWrapper
       .querySelectorAll('.keselect__option')
@@ -335,9 +335,9 @@ class Keselect {
    *
    * @param {boolean} [isOpen=true] Are you want to open the dropdown or not ?
    */
-  openDropdown (isOpen = true) {
-    const { $dropdown } = this.elements
-    const { onDropdownOpen, onDropdownClose } = this.options
+  _openDropdown (isOpen = true) {
+    const { $dropdown } = this._elements
+    const { onDropdownOpen, onDropdownClose } = this._options
 
     if (isOpen) {
       $dropdown.classList.remove('keselect__dropdown--hide')
@@ -357,8 +357,8 @@ class Keselect {
    *
    * @param {boolean} [isShow=true] Are you want to show the message or not ?
    */
-  showMessage (isShow = true) {
-    const { $messageWrapper } = this.elements
+  _showMessage (isShow = true) {
+    const { $messageWrapper } = this._elements
 
     if (isShow) {
       $messageWrapper.classList.remove('keselect__message-wrapper--hide')
@@ -374,8 +374,8 @@ class Keselect {
    *
    * @param {boolean} [isShow=true] Are you want to show selected as placeholder ?
    */
-  showPlaceholder (isShow = true) {
-    const { $selected } = this.elements
+  _showPlaceholder (isShow = true) {
+    const { $selected } = this._elements
 
     if (isShow) {
       $selected.classList.add('keselect__selected--placeholder')
@@ -390,8 +390,8 @@ class Keselect {
    * @param {string} value New value
    */
   setValue (value) {
-    const { $selected, $optionWrapper } = this.elements
-    const { onSearch } = this.options
+    const { $selected, $optionWrapper } = this._elements
+    const { onSearch } = this._options
     const isAjaxUsed = !!onSearch
     const isValueInvalid = typeof value !== 'string'
 
@@ -403,7 +403,7 @@ class Keselect {
       throw new Error('Method "setValue" cannot be used when "onSearch" callback used.')
     }
 
-    const item = this.items.find(item => {
+    const item = this._items.find(item => {
       return item.value === value
     })
 
@@ -420,10 +420,10 @@ class Keselect {
 
     $option.classList.add('keselect__option--selected')
 
-    this.showPlaceholder(!value)
+    this._showPlaceholder(!value)
 
     $selected.textContent = item.label
-    this.elements.$origin.selectedIndex = item.index
+    this._elements.$origin.selectedIndex = item.index
   }
 
   /**
@@ -432,7 +432,7 @@ class Keselect {
    * @returns {string} Keselect value
    */
   getValue () {
-    return this.elements.$origin.value
+    return this._elements.$origin.value
   }
 }
 

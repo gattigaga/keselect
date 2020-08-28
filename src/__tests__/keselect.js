@@ -34,7 +34,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $messageWrapper, $dropdown } = keselect.elements
+      const { $selected, $messageWrapper, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -53,7 +53,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $search, $messageWrapper, $dropdown } = keselect.elements
+      const { $selected, $search, $messageWrapper, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -78,7 +78,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -100,7 +100,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -117,7 +117,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -134,7 +134,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -151,7 +151,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { isDisabled: true })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -166,7 +166,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { onDropdownOpen })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -181,7 +181,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { onDropdownClose })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -200,7 +200,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { onDropdownClose })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -219,7 +219,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { onDropdownClose })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -238,7 +238,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select, { onDropdownClose })
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -256,7 +256,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect(keselect.getValue()).toBe('')
 
@@ -311,7 +311,7 @@ describe('Keselect', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
       const keselect = new Keselect($select)
-      const { $selected, $dropdown } = keselect.elements
+      const { $selected, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -391,7 +391,7 @@ describe('Keselect', () => {
         }
       })
 
-      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
@@ -441,7 +441,7 @@ describe('Keselect', () => {
         }
       })
 
-      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect.elements
+      const { $selected, $search, $messageWrapper, $message, $dropdown } = keselect._elements
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
 
