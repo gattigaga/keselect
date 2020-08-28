@@ -26,8 +26,8 @@ class Keselect {
     this._options = {
       isDisabled: false,
       onSearch: null,
-      onDropdownOpen: () => {},
-      onDropdownClose: () => {},
+      onDropdownOpen: null,
+      onDropdownClose: null,
       ...options
     }
 
@@ -367,12 +367,16 @@ class Keselect {
       $dropdown.classList.remove('keselect__dropdown--hide')
       $dropdown.classList.add('keselect__dropdown--show')
 
-      onDropdownOpen()
+      if (onDropdownOpen) {
+        onDropdownOpen()
+      }
     } else {
       $dropdown.classList.remove('keselect__dropdown--show')
       $dropdown.classList.add('keselect__dropdown--hide')
 
-      onDropdownClose()
+      if (onDropdownClose) {
+        onDropdownClose()
+      }
     }
   }
 
