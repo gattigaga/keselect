@@ -288,8 +288,8 @@ describe('Keselect', () => {
     it('should not set new value because ajax is used', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')
-      const keselect = new Keselect($select, { isAjaxUsed: true })
-      const message = 'Method "setValue" cannot be used when "isAjaxUsed" active.'
+      const keselect = new Keselect($select, { onSearch: () => {} })
+      const message = 'Method "setValue" cannot be used when "onSearch" callback used.'
 
       const setValue = () => keselect.setValue('4')
 
@@ -377,7 +377,6 @@ describe('Keselect', () => {
       const $select = getByTestId($main, 'keselect')
 
       const keselect = new Keselect($select, {
-        isAjaxUsed: true,
         onSearch: (keyword, setItems) => {
           const filteredItems = items.filter(item => {
             const pattern = new RegExp(keyword, 'ig')
@@ -428,7 +427,6 @@ describe('Keselect', () => {
       const $select = getByTestId($main, 'keselect')
 
       const keselect = new Keselect($select, {
-        isAjaxUsed: true,
         onSearch: (keyword, setItems) => {
           const filteredItems = items.filter(item => {
             const pattern = new RegExp(keyword, 'ig')

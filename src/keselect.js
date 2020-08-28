@@ -7,8 +7,7 @@ class Keselect {
    * @param {HTMLSelectElement} $origin Raw select element.
    * @param {Object} options Used as configuration.
    * @param {boolean} options.isDisabled Toggle enable/disable select functionality.
-   * @param {boolean} options.isAjaxUsed Toggle if AJAX has been used or not.
-   * @param {function} options.onSearch Callback that called everytime when user typed on the search box, to use it, "isAjaxUsed" should be "true".
+   * @param {function} options.onSearch Callback that called everytime when user typed on the search box.
    * @param {function} options.onDropdownOpen Callback that called after drodown has been opened.
    * @param {function} options.onDropdownClose Callback that called after dropdown has been closed.
    */
@@ -21,8 +20,7 @@ class Keselect {
 
     this.options = {
       isDisabled: false,
-      isAjaxUsed: false,
-      onSearch: () => {},
+      onSearch: null,
       onDropdownOpen: () => {},
       onDropdownClose: () => {},
       ...options
@@ -45,9 +43,10 @@ class Keselect {
 
     this.items = this.getItemsFromOrigin()
 
-    const { isAjaxUsed, isDisabled, onSearch } = this.options
+    const { isDisabled, onSearch } = this.options
     const { $container, $search, $dropdown, $selected, $message, $origin } = this.elements
     const $rawOptions = Object.values($origin.options)
+    const isAjaxUsed = !!onSearch
 
     if (isAjaxUsed) {
       const $defaultItem = $rawOptions.find(($option, index) => !index)
@@ -174,7 +173,8 @@ class Keselect {
    */
   getItemsFromOrigin () {
     const { $origin } = this.elements
-    const { isAjaxUsed } = this.options
+    const { onSearch } = this.options
+    const isAjaxUsed = !!onSearch
     const $rawOptions = Object.values($origin.options)
 
     const items = $rawOptions
@@ -263,7 +263,8 @@ class Keselect {
    */
   createItemElements (items) {
     const { $origin, $selected, $optionWrapper } = this.elements
-    const { isAjaxUsed } = this.options
+    const { onSearch } = this.options
+    const isAjaxUsed = !!onSearch
 
     $optionWrapper.innerHTML = `
       ${items.map(item => {
@@ -384,13 +385,14 @@ class Keselect {
   }
 
   /**
-   * Set new value but can be used only if "isAjaxUsed" is "false".
+   * Set new value but can be used only if "onSearch" callback is not defined.
    *
    * @param {string} value New value
    */
   setValue (value) {
     const { $selected, $optionWrapper } = this.elements
-    const { isAjaxUsed } = this.options
+    const { onSearch } = this.options
+    const isAjaxUsed = !!onSearch
     const isValueInvalid = typeof value !== 'string'
 
     if (isValueInvalid) {
@@ -398,7 +400,7 @@ class Keselect {
     }
 
     if (isAjaxUsed) {
-      throw new Error('Method "setValue" cannot be used when "isAjaxUsed" active.')
+      throw new Error('Method "setValue" cannot be used when "onSearch" callback used.')
     }
 
     const item = this.items.find(item => {
