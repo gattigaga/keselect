@@ -67,6 +67,22 @@ npm install keselect
 </html>
 ```
 
+## Options
+
+| Key                   | Type                                                | Default Value | Description                                 |
+|-----------------------|-----------------------------------------------------|---------------|---------------------------------------------|
+| ```isDisabled```      | ```boolean```                                       | ```false```   | Toggle disable select functionality.        |
+| ```onSearch```        | ```(keyword: string, setItems: Function) => void``` | ```null```    | Used to set options from Ajax result.       |
+| ```onDropdownClose``` | ```() => void```                                    | ```null```    | Callback that called after dropdown closed. |
+| ```onDropdownOpen```  | ```() => void```                                    | ```null```    | Callback that called after dropdown opened. |
+
+## Methods
+
+| Name                  | Type                              | Description                                 |
+|-----------------------|-----------------------------------|---------------------------------------------|
+| ```setValue```        | ```(value: string) => void```     | Toggle disable select functionality.        |
+| ```getValue```        | ```() => string```                | Used to set options from Ajax result.       |
+
 ## Development
 
 ```npm start``` - to start development environment
