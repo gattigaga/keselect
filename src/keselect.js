@@ -18,6 +18,11 @@ class Keselect {
       throw new Error('Passed element is not a valid HTML element.')
     }
 
+    /**
+     * Keselect's configuration.
+     *
+     * @private
+     */
     this._options = {
       isDisabled: false,
       onSearch: null,
@@ -26,7 +31,18 @@ class Keselect {
       ...options
     }
 
+    /**
+     * All created elements after initialization.
+     *
+     * @private
+     */
     this._elements = { $origin }
+
+    /**
+     * Items gotten from raw select's option.
+     *
+     * @private
+     */
     this._items = []
 
     this._initialize()
@@ -34,6 +50,8 @@ class Keselect {
 
   /**
    * Initialize keselect.
+   *
+   * @private
    */
   _initialize () {
     this._elements = {
@@ -169,6 +187,7 @@ class Keselect {
   /**
    * Get items from raw select's options.
    *
+   * @private
    * @returns {Object[]} Items that would be used as keselect's option elements.
    */
   _getItemsFromOrigin () {
@@ -192,6 +211,7 @@ class Keselect {
    * Create base elements that wraps the raw select element.
    * After this function called, you can access the elements from the DOM.
    *
+   * @private
    * @returns {Object} Elements that has been created.
    */
   _createBaseElements () {
@@ -256,6 +276,7 @@ class Keselect {
   /**
    * Create keselect's option elements.
    *
+   * @private
    * @param {Object[]} items Items that would be used as keselect's option elements.
    * @param {number} items[].index Index of the option (starts from 0).
    * @param {string} items[].label Label of the option.
@@ -321,6 +342,8 @@ class Keselect {
 
   /**
    * Remove all keselect's option elements.
+   *
+   * @private
    */
   _removeItemElements () {
     const { $optionWrapper } = this._elements
@@ -333,6 +356,7 @@ class Keselect {
   /**
    * Toggle open/close dropdown.
    *
+   * @private
    * @param {boolean} [isOpen=true] Are you want to open the dropdown or not ?
    */
   _openDropdown (isOpen = true) {
@@ -355,6 +379,7 @@ class Keselect {
   /**
    * Toggle show/hide message inside dropdown.
    *
+   * @private
    * @param {boolean} [isShow=true] Are you want to show the message or not ?
    */
   _showMessage (isShow = true) {
@@ -372,6 +397,7 @@ class Keselect {
   /**
    * Toggle set selected option in select box as placeholder or regular selected.
    *
+   * @private
    * @param {boolean} [isShow=true] Are you want to show selected as placeholder ?
    */
   _showPlaceholder (isShow = true) {
