@@ -1,5 +1,6 @@
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CopyPlugin = require('copy-webpack-plugin')
 const path = require('path')
 
 module.exports = {
@@ -35,6 +36,14 @@ module.exports = {
     }),
     new MiniCssExtractPlugin({
       filename: 'keselect.min.css'
+    }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: './src/keselect.js',
+          to: path.resolve(__dirname, 'dist/keselect.mod.js')
+        }
+      ]
     })
   ]
 }
