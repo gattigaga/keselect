@@ -82,6 +82,7 @@ npm install keselect
 |-----------------------|-----------------------------------|---------------------------------------------|
 | ```setValue```        | ```(value: string) => void```     | Toggle disable select functionality.        |
 | ```getValue```        | ```() => string```                | Used to set options from Ajax result.       |
+| ```destroy```         | ```() => void```                  | Destroy keselect's instance.                |
 
 ## Development
 
