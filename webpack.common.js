@@ -42,6 +42,10 @@ module.exports = {
         {
           from: './src/keselect.js',
           to: path.resolve(__dirname, 'dist/keselect.mod.js')
+        },
+        {
+          from: './src/keselect.d.ts',
+          to: path.resolve(__dirname, 'dist/keselect.mod.d.ts')
         }
       ]
     })
