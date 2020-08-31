@@ -47,6 +47,11 @@ class Keselect {
    * @returns Keselect value.
    */
   getValue(): string;
+
+  /**
+   * Destroy keselect's instance.
+   */
+  destroy(): void;
 };
 
 export default Keselect;

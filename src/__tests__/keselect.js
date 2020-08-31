@@ -30,6 +30,28 @@ describe('Keselect', () => {
       expect(keselect).toThrowError(message)
     })
 
+    it('should destroy the instance', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $container } = keselect._elements
+
+      expect($main).toContainElement($container)
+
+      keselect.destroy()
+
+      expect($main).not.toContainElement($container)
+
+      const setValue = () => keselect.setValue(4)
+      const getValue = () => keselect.getValue()
+      const destroy = () => keselect.destroy()
+      const message = 'Instance has been destroyed.'
+
+      expect(setValue).toThrowError(message)
+      expect(getValue).toThrowError(message)
+      expect(destroy).toThrowError(message)
+    })
+
     it('should open the dropdown and select an option', () => {
       const $main = initDOM()
       const $select = getByTestId($main, 'keselect')

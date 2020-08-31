@@ -45,6 +45,13 @@ class Keselect {
      */
     this._items = []
 
+    /**
+     * Indicate that is this class instance has been destroyed or not.
+     *
+     * @private
+     */
+    this._isDestroyed = false
+
     this._initialize()
   }
 
@@ -420,6 +427,10 @@ class Keselect {
    * @param {string} value New value
    */
   setValue (value) {
+    if (this._isDestroyed) {
+      throw new Error('Instance has been destroyed.')
+    }
+
     const { $selected, $optionWrapper } = this._elements
     const { onSearch } = this._options
     const isAjaxUsed = !!onSearch
@@ -462,7 +473,27 @@ class Keselect {
    * @returns {string} Keselect value
    */
   getValue () {
+    if (this._isDestroyed) {
+      throw new Error('Instance has been destroyed.')
+    }
+
     return this._elements.$origin.value
+  }
+
+  /**
+   * Destroy keselect's instance.
+   */
+  destroy () {
+    if (this._isDestroyed) {
+      throw new Error('Instance has been destroyed.')
+    }
+
+    const { $container, $origin } = this._elements
+
+    $container.parentNode.insertBefore($origin, $container)
+    $container.remove()
+
+    this._isDestroyed = true
   }
 }
 
