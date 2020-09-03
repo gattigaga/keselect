@@ -52,6 +52,13 @@ class Keselect {
      */
     this._isDestroyed = false
 
+    /**
+     * Callback that be called when user change the value by clicking an option item.
+     *
+     * @private
+     */
+    this._onChange = null
+
     this._initialize()
   }
 
@@ -343,6 +350,10 @@ class Keselect {
         }
 
         this._openDropdown(false)
+
+        if (this._onChange) {
+          this._onChange(value)
+        }
       })
     })
   }
@@ -494,6 +505,21 @@ class Keselect {
     $container.remove()
 
     this._isDestroyed = true
+  }
+
+  /**
+   * An event listener that listen to everytime user change the value by clicking an option item.
+   *
+   * @param {Function} callback Called when user change the value.
+   */
+  onChange (callback) {
+    if (this._isDestroyed) {
+      throw new Error('Instance has been destroyed.')
+    }
+
+    if (callback) {
+      this._onChange = callback
+    }
   }
 }
 

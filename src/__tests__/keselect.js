@@ -45,11 +45,13 @@ describe('Keselect', () => {
       const setValue = () => keselect.setValue(4)
       const getValue = () => keselect.getValue()
       const destroy = () => keselect.destroy()
+      const onChange = () => keselect.onChange()
       const message = 'Instance has been destroyed.'
 
       expect(setValue).toThrowError(message)
       expect(getValue).toThrowError(message)
       expect(destroy).toThrowError(message)
+      expect(onChange).toThrowError(message)
     })
 
     it('should open the dropdown and select an option', () => {
@@ -345,6 +347,27 @@ describe('Keselect', () => {
 
       expect($dropdown).toHaveClass('keselect__dropdown--hide')
       expect(keselect.getValue()).toBe('4')
+    })
+
+    it('should listen when user change the value via clicking an option item', () => {
+      const $main = initDOM()
+      const $select = getByTestId($main, 'keselect')
+      const keselect = new Keselect($select)
+      const { $selected, $dropdown } = keselect._elements
+      const callback = jest.fn()
+
+      keselect.onChange(callback)
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+
+      getByText($selected, 'Select Language').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--show')
+
+      getByText($dropdown, 'Japanese').click()
+
+      expect($dropdown).toHaveClass('keselect__dropdown--hide')
+      expect(callback).toBeCalledWith('4')
     })
   })
 

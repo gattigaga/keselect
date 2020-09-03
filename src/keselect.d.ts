@@ -10,6 +10,7 @@ type Item = {
 };
 
 type SetItemsCallback = (items: Item[]) => void;
+type OnChangeCallback = (value: string) => void;
 
 type Options = {
   /** Toggle enable/disable select functionality. */
@@ -52,6 +53,13 @@ class Keselect {
    * Destroy keselect's instance.
    */
   destroy(): void;
+
+  /**
+   * An event listener that listen to everytime user change the value by clicking an option item.
+   *
+   * @param callback Called when user change the value.
+   */
+  onChange(callback: OnChangeCallback): void;
 };
 
 export default Keselect;
