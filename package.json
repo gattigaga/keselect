@@ -19,6 +19,7 @@
   "bugs": {
     "url": "https://github.com/gattigaga/keselect/issues"
   },
+  "keywords": ["select", "dropdown", "searchable"],
   "homepage": "https://github.com/gattigaga/keselect",
   "devDependencies": {
     "@babel/core": "^7.10.5",
