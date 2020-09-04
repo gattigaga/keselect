@@ -22,50 +22,11 @@ npm install keselect
 
 ## Example
 
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Demo | Keselect</title>
-    <link rel="stylesheet" href="./keselect.min.css" />
-    <style>
-      body {
-        margin: 0px;
-        padding: 0px;
-      }
+[Basic](https://codesandbox.io/s/keselect-example-basic-wl5wk)
 
-      .container {
-        height: 100vh;
-        padding: 16px;
-        box-sizing: border-box;
-      }
-    </style>
-  </head>
+[Set options via Ajax](https://codesandbox.io/s/keselect-example-ajax-ryroy)
 
-  <body>
-    <div class="container">
-      <select name="language_id" id="languages">
-        <option value="">Select Language</option>
-        <option value="1">Bahasa Indonesia</option>
-        <option value="2">Arabic</option>
-        <option value="3">English</option>
-        <option value="4">Japanese</option>
-        <option value="5">Chinese</option>
-        <option value="6">Russian</option>
-      </select>
-    </div>
-
-    <script src="./keselect.min.js"></script>
-    <script>
-      const $languages = document.getElementById("languages");
-
-      keselect($languages);
-    </script>
-  </body>
-</html>
-```
+[onChange callback](https://codesandbox.io/s/keselect-example-onchange-khfk2)
 
 ## Options
 
@@ -80,8 +41,8 @@ npm install keselect
 
 | Name                  | Type                              | Description                                                                   |
 |-----------------------|-----------------------------------|-------------------------------------------------------------------------------|
-| ```setValue```        | ```(value: string) => void```     | Toggle disable select functionality.                                          |
-| ```getValue```        | ```() => string```                | Used to set options from Ajax result.                                         |
+| ```setValue```        | ```(value: string) => void```     | Set new value.                                                                |
+| ```getValue```        | ```() => string```                | Get keselect's value.                                                         |
 | ```destroy```         | ```() => void```                  | Destroy keselect's instance.                                                  |
 | ```onChange```        | ```(callback: Function) => void```| Callback that be called when user change the value by clicking an option item.|
 
