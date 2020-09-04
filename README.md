@@ -12,12 +12,36 @@ You can download it from:
 
 https://github.com/gattigaga/keselect/releases
 
+You can pick **keselect.min.css** and **keselect.min.js** from **dist** directory and use that like this.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Other code -->
+    <link rel="stylesheet" href="./keselect.min.css" />
+  </head>
+  <body>
+    <!-- Other code -->
+
+    <script src="./keselect.min.js"></script>
+  </body>
+</html>
+```
+
 or
 
 You can install it via NPM:
 
 ```bash
 npm install keselect
+```
+
+And import that like this.
+
+```javascript
+import Keselect from "keselect";
+import "keselect/dist/keselect.min.css";
 ```
 
 ## Example
