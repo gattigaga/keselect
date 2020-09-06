@@ -1,6 +1,6 @@
 {
   "name": "keselect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Keselect is a zero dependencies improved selectbox that have feature to search the options",
   "main": "dist/keselect.mod.js",
   "scripts": {
